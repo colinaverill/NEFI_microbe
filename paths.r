@@ -246,6 +246,7 @@ NEON_plot.level_yeast_obs_fastq.path <- paste0(dir,'NEON_plot.level_yeast_obs_fa
 NEON_site.level_yeast_obs_fastq.path <- paste0(dir,'NEON_site.level_yeast_obs_fastq.rds')
 NEON_plot.level_phyla_obs_fastq.path <- paste0(dir,'NEON_plot.level_phyla_obs_fastq.rds')
 NEON_site.level_phyla_obs_fastq.path <- paste0(dir,'NEON_site.level_phyla_obs_fastq.rds')
+NEON_all.phylo.levels_plot.site_obs_fastq.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq.path')
 
 
 #### ITS/pecan_gen: Forecasts, variance decomposition and variable importance output paths.----

@@ -31,7 +31,7 @@ for(i in 1:length(levels)){
   level <- levels[i]
   reference <- data.table(ref[[i]]$group_frequencies)
   reference <- as.character(reference[sample_frequency > 0.5]$groups)
-  output[[i]] <- common_group_quantification(sv, tax, reference, level)
+  output[[i]] <- common_group_quantification(sv, tax, reference, level, ref_filter = T)
 }
 names(output) <- names(ref)
 

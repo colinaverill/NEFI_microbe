@@ -26,7 +26,7 @@ foreach(i = 1:length(d)) %dopar% {
   #Get y multivariate matrix.
   abundances <- d[[i]]$abundances
   seq.depth  <- d[[i]]$seq_total
-  y <- as.matrix((abundances + 1) / seq.depth)
+  y <- as.matrix((abundances + 1) / rowSums(abundances + 1))
 
   #get core_plot and plot_site indexing.
   core_plot <- substr(rownames(y), 1, 8)

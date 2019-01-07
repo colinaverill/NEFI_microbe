@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-common_group_quantification <- function(sv, tax, groups, tax_level, samp_freq = 0.5){
+common_group_quantification <- function(sv, tax, groups, tax_level, samp_freq = 0.5, ref_filter = F){
   #some tests.
   if(ncol(sv) != nrow(tax)){
     stop('Number of columns of sv table does not match number of rows in taxonomy table.')
@@ -76,7 +76,13 @@ common_group_quantification <- function(sv, tax, groups, tax_level, samp_freq = 
   frequency$sample_frequency <- as.character(frequency$sample_frequency)
   frequency$sample_frequency <- as.numeric(frequency$sample_frequency)
   #subset to those that are found in > sam_freq of samples (default 50%).
-  ref.frequency <- frequency[frequency$sample_frequency > samp_freq,]
+  if(ref_filter == F){
+    ref.frequency <- frequency[frequency$sample_frequency > samp_freq,]
+  }
+  #if ref_filter is on, don't filter by frequency, filter by supplied unique groups.
+  if(ref_filter == T){
+    ref.frequency <- frequency[frequency$groups %in% groups,]
+  }
   #kill unknown and anything unknown
   ref.frequency <- ref.frequency[!(ref.frequency$groups %in% c('unknown','Unknown')),]
   #merge in number of OTUs, diversity and evenness in each group to frequency table.

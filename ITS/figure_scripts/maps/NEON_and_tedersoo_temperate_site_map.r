@@ -5,7 +5,7 @@ library(ggplot2)
 library(ggalt)
 
 #set output path.----
-out.path <- 'map.png'
+out.path <- 'ted_NEO_map.png'
 
 #load location data and format.----
 d <- readRDS(ITS_site_dates.path)
