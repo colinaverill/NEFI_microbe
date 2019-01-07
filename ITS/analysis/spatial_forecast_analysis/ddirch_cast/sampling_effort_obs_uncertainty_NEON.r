@@ -25,10 +25,10 @@ dat <- dat/rowSums(dat)
 
 #sampling depths and number of trials.
 potential.n.samp <- c(3,5,6, 8, 10, 15, 20, 30, 40, 50)
-n.trial <- 5
+n.trial <- 1000
 
 #run simulation.----
-cat(paste0('Running bootstrap simulation for ',n.trials,' iterations...\n'))
+cat(paste0('Running bootstrap simulation for ',n.trial,' iterations across ',length(sites),' sites...\n'))
 tic()
 super.super.out <- list()
 for(k in 1:length(sites)){
