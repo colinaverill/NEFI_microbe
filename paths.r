@@ -97,7 +97,7 @@ NEON_dada2_SV_table.path <- paste0(dir,'NEON_dada2_SV_table.rds')
 NEON_dada2_tax_table.path <- paste0(dir,'NEON_dada2_tax_table.rds')
 NEON_dada2_track_table.path <- paste0(dir,'NEON_dada2_track_table.rds')
 
-#### ITS/scc_gen: JAGS output paths. ####
+#### ITS/scc_gen: JAGS and monte carlo output paths. ####
 dir <- paste0(ITS_scc_gen_dir,'JAGS_output/')
 cmd <- paste0('mkdir -p ',dir)
 system(cmd)
@@ -111,6 +111,9 @@ ted_ITS_prior_phylo.group_JAGSfits <- paste0(dir,'ted_ITS.pror_phylo.groups_JAGS
 ted_ITS.prior_dmulti.ddirch_fg_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_fg_JAGSfit.rds')
 ted_ITS.prior_dmulti.ddirch_cosmo_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_cosmo_JAGSfit.rds')
 ted_ITS.prior_dmulti.ddirch_yeast_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_yeast_JAGSfit.rds')
+
+#Sampling effort bootstrap analyses
+HARV_sampling_effort_analysis.path <- paste0(dir,'HARV_sampling_effort_analysis.rds')
 
 #### ITS/scc_gen: tedersoo 2014 SV and taxonomy paths. ####
 ted_2014_SV.table.path <- paste0(ITS_scc_gen_dir,'ted_2014_SV.table.rds')
