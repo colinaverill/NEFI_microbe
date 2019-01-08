@@ -114,6 +114,7 @@ ted_ITS.prior_dmulti.ddirch_yeast_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-dd
 
 #Sampling effort bootstrap analyses
 HARV_sampling_effort_analysis.path <- paste0(dir,'HARV_sampling_effort_analysis.rds')
+NEON_sampling_effort_analysis_plot.level.path <- paste0(dir,'NEON_sampling_effort_analysis_plot.level.rds')
 
 #### ITS/scc_gen: tedersoo 2014 SV and taxonomy paths. ####
 ted_2014_SV.table.path <- paste0(ITS_scc_gen_dir,'ted_2014_SV.table.rds')
