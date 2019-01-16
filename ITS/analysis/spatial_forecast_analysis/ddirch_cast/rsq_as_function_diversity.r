@@ -41,43 +41,60 @@ names(cal.r2_table) <- names(cal)
 #get R2 tables within each phylo level, merge in diversity statistics, calibration r2.----
 output1 <- list() #full table
 for(i in 1:length(d)){
-pred <- fcast[[i]]$site.fit$mean
- obs <- d[[i]]$site.fit$mean
-pred <- pred[,order(match(colnames(pred), colnames(obs)))]
-cal.rsq <- cal.r2_table[[i]]
- 
-#make sure same order and identity of rownames
- obs <-  obs[rownames(obs ) %in% rownames(pred),]
-pred <- pred[rownames(pred) %in% rownames( obs),]
-rsq <- list()
-rsq.1 <- list()
-for(j in 1:ncol(obs)){
-  #get best-fit rsq.
-  mod <- lm(obs[,j] ~ pred[,j])
-  rsq[[j]] <- summary(mod)$r.squared
-  #get rsq relative to 1:1 line.
-  rss <- sum((pred[,j] - obs[,j]) ^ 2)       ## residual sum of squares
-  tss <- sum((obs[,j] - mean(obs[,j])) ^ 2)  ## total sum of squares
-  rsq.1[[j]] <- 1 - rss/tss
-}
-rsq <- data.frame(unlist(rsq))
-rsq.1 <- data.frame(unlist(rsq.1))
-rsq <- cbind(colnames(obs), rsq, rsq.1)
-colnames(rsq) <- c('group','rsq','rsq.1')
-
-rsq$group <- as.character(rsq$group)
-div.merge <- div[[i]]$group_frequencies
-rsq <- merge(rsq, div.merge, by.x = 'group', by.y = 'groups', all.x = T)
-rsq <- merge(rsq, cal.rsq, all.x = T)
-rsq <- rsq[!(names(rsq) %in% 'other')]
-rsq$phylo_level <- names(d)[i]
-output1[[i]] <- rsq
+  pred <- fcast[[i]]$site.fit$mean
+   obs <-     d[[i]]$site.fit$mean
+  pred <- pred[,order(match(colnames(pred), colnames(obs)))]
+  cal.rsq <- cal.r2_table[[i]]
+   
+  #make sure same order and identity of rownames
+   obs <-  obs[rownames(obs ) %in% rownames(pred),]
+  pred <- pred[rownames(pred) %in% rownames( obs),]
+  rsq   <- list()
+  rsq.1 <- list()
+  abundance <- list()
+  variance  <- list()
+  for(j in 1:ncol(obs)){
+    #get best-fit rsq.
+    mod <- lm(obs[,j] ~ pred[,j])
+    rsq[[j]] <- summary(mod)$r.squared
+    #get rsq relative to 1:1 line.
+    rss <- sum((pred[,j] - obs[,j]) ^ 2)       ## residual sum of squares
+    tss <- sum((obs[,j] - mean(obs[,j])) ^ 2)  ## total sum of squares
+    rsq.1[[j]] <- 1 - rss/tss
+    abundance[[j]] <- boot::inv.logit(mean(boot::logit(obs[,j])))
+     variance[[j]] <- boot::inv.logit(sd(boot::logit(obs[,j])))
+  }
+        rsq <- data.frame(unlist(rsq))
+      rsq.1 <- data.frame(unlist(rsq.1))
+  abundance <- data.frame(unlist(abundance))
+   variance <- data.frame(unlist(variance))
+  rsq <- cbind(colnames(obs), rsq, rsq.1,abundance, variance)
+  colnames(rsq) <- c('group','rsq','rsq.1','val_abundance','val_variance')
+  
+  rsq$group <- as.character(rsq$group)
+  div.merge <- div[[i]]$group_frequencies
+  rsq <- merge(rsq, div.merge, by.x = 'group', by.y = 'groups', all.x = T)
+  rsq <- merge(rsq, cal.rsq, all.x = T)
+  rsq <- rsq[!(names(rsq) %in% 'other')]
+  rsq$phylo_level <- names(d)[i]
+  output1[[i]] <- rsq
 }
 names(output1) <- names(d)
 test <- do.call(rbind, output1)
+test$rsq.1 <- ifelse(test$rsq.1 < 0, 0, test$rsq.1)
+test$rsq_bin <- ifelse(test$rsq.1 == 0, 0, 1)
 
 #if rsq.1 is less than 0, set it to zero.
-test$rsq.1 <- ifelse(test$rsq.1 < 0, 0, test$rsq.1)
+mod <- lm((rsq.1) ~ val_abundance + val_variance + N.SVs , 
+          data = test[test$rsq.1 > 0,])
+summary(mod)
+plot(mod$model$`(rsq.1)` ~ mod$fitted.values)
+abline(lm(mod$model$`(rsq.1)`  ~ mod$fitted.values), lwd =2)
+
+#predict whether or not rsq 1:1 is zero.
+mod2 <- glm(rsq_bin ~ val_abundance + val_variance  + log(N.SVs),
+            data = test[test$cal_rsq > 0.2,], family = binomial)
+summary(mod2); paste0('rsq = ',round(1 - mod2$deviance / mod2$null.deviance,2))
 
 #plot results.----
 #out of sample rsq vs. calibration.

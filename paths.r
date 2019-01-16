@@ -81,6 +81,11 @@ system(cmd)
 cmd <- paste0('mkdir -p ',ASV_16S.dir)
 system(cmd)
 
+#power data from NEON prototype analyses for intra-core variability.
+power_dir <- paste0(big_data_dir,'NEON_power_core_data/')
+power_seq_dir <- paste0(power_dir,'NEON_MicrobePrototypeData-2009-2010/')
+
+
 #### 16S/scc_gen: bahram processed sequences ####
 dir <- paste0(scc_gen_16S_dir,'bahram_processed/')
 cmd <- paste0('mkdir -p ',dir)
@@ -106,6 +111,7 @@ ted_ITS.prior_20gen_JAGSfit <- paste0(dir,'ted_ITS.prior_20gen_JAGSfit.rds')
 ted_ITS.prior_phyla_JAGSfit <- paste0(dir,'ted_ITS.prior_phyla_JAGSfit.rds')
 ITS.prior_linear_fg_cov.selection_JAGS <- paste0(dir,'ITS.prior_linear_fg_cov.selection_JAGS.rds')
 ted_ITS_prior_phylo.group_JAGSfits <- paste0(dir,'ted_ITS.pror_phylo.groups_JAGSfits.rds')
+ITS_NEON_observation_uncertainty.path <- paste0(dir,'ITS_NEON_observation_uncertainty.rds')
 
 #dmulti-ddirch output, fit with fastq-derived data.
 ted_ITS.prior_dmulti.ddirch_fg_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_fg_JAGSfit.rds')

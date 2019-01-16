@@ -1,0 +1,45 @@
+#!/bin/bash -l
+# qsun for fitting functional group models.
+########################################
+####      commands for scc qsub     ####
+########################################
+#Specfiy hard time limit for the job.
+#$ -l h_rt=80:00:00
+#
+#Use N processors on a single machine.
+#$ -pe omp 36
+#
+#Give the job a name
+#$ -N obs_NEON_uncert
+#
+# Merge stderr into the stdout file, to reduce clutter
+#$ -j y
+#$ -o $JOB_NAME.log
+#
+#
+# Have the system send mail when the job begins and when the job is aborted or ended
+#$ -m ae
+#
+# Inherit the current environment (load modules python/2.7.7, qiime, and find binaries)
+# Make sure th load those modules in the command line before you submit the qsub
+#$ -V 
+#
+# end of qsub arguments
+#
+########################################
+#### begin commands to run R script ####
+########################################
+#
+#
+# load necessary modules 
+module load R/3.4.0
+#
+# cd into directory, for safety purposes
+cd /projectnb/talbot-lab-data/caverill/NEFI_microbe
+#
+# in the directory specified above, invoke this function:
+Rscript ITS/analysis/spatial_forecast_analysis/ddirch_cast/NEON_obs_uncertainty_rsq_analysis.r
+#
+#
+#End of commands.
+#
