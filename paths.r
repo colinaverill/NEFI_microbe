@@ -149,6 +149,10 @@ NEON_ddirch_var.decomp_cosmo_figure.path <- paste0(dir,'NEON_ddirch_var.decomp_c
 NEON_ddirch_var.importance_fg_figure.path <- paste0(dir,'NEON_ddirch_var.importance_fg.png')
 NEON_ddirch_var.importance_cosmo_figure.path <- paste0(dir,'NEON_ddirch_var.importance_fg.png')
 
+#calibration figures.
+ITS_prior_r2_distribution.density_figure.path <- paste0(dir,'ITS_prior_r2_distribution.density_figure.png')
+ITS_prior_calibration_fits.path <- paste0(dir,'ITS_prior_calibration_fits')
+
 #dmulti-ddirch forecast-validation.
 NEON_dmulti.ddirch_fg_forecast_validation.path <- paste0(dir,'NEON_dmulti.ddirch_fg_forecast_validation.png')
 NEON_dmulti.ddirch_cosmo_forecast_validation.path <- paste0(dir,'NEON_dmulti.ddirch_cosmo_forecast_validation.png')
