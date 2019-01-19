@@ -152,6 +152,7 @@ NEON_ddirch_var.importance_cosmo_figure.path <- paste0(dir,'NEON_ddirch_var.impo
 #calibration figures.
 ITS_prior_r2_distribution.density_figure.path <- paste0(dir,'ITS_prior_r2_distribution.density_figure.png')
 ITS_prior_calibration_fits.path <- paste0(dir,'ITS_prior_calibration_fits')
+ITS_variable.imp_all_fungi.path <- paste0(dir,'ITS_variable.imp_all_fungi.rds')
 
 #dmulti-ddirch forecast-validation.
 NEON_dmulti.ddirch_fg_forecast_validation.path <- paste0(dir,'NEON_dmulti.ddirch_fg_forecast_validation.png')
@@ -274,6 +275,7 @@ NEON_site_fcast_genera.path <- paste0(dir,'NEON_fcast_site.level_genera.rds')
 NEON_site_fcast_phyla.path <- paste0(dir,'NEON_fcast_phyla.rds')
 NEON_site_fcast_all_phylo_levels.path <- paste0(dir,'NEON_fcast_all_phylo_levels.rds')
 NEON_fg_variable_importance_data.path <- paste0(dir,'NEON_fg_variable_importance_data.rds')
+NEON_phylo.group_variable_importance_data.path <- paste0(dir,'NEON_phylo.group_variable_importance_data.rds')
 NEON_genera_variable_importance_data.path <- paste0(dir,'NEON_genera_variable_importance_data.rds')
 NEON_phyla_variable_importance_data.path <- paste0(dir,'NEON_phyla_variable_importance_data.rds')
 NEON_ddirch_var.decomp_fg.path <- paste0(dir,'NEON_ddirch_var.decomp_fg.rds')
