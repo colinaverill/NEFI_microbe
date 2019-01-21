@@ -16,12 +16,12 @@ n.cores <- detectCores()
 registerDoParallel(cores=n.cores)
 
 #set output path.----
-output.path <- ted_ITS_prior_phylo.group_JAGSfits
+output.path <- ted_ITS_prior_phylo.group_JAGSfits_micronutrient
 
 #load tedersoo data.----
 d <- data.table(readRDS(tedersoo_ITS_clean_map.path))
 y <- readRDS(tedersoo_ITS_common_phylo_groups_list.path)
-d <- d[,.(SRR.id,pC,cn,pH,NPP,map,mat,forest,conifer,relEM)]
+d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM,P,K,Ca,Mg)]
 d <- d[complete.cases(d),] #optional. This works with missing data.
 #d <- d[1:35,] #for testing
 

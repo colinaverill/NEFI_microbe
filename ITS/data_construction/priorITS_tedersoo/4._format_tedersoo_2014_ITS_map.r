@@ -53,9 +53,9 @@ map[grep('Pinus',Dominant.Ectomycorrhizal.host),conifer := 1]
 map$relEM <- map$Relative.basal.area.of.EcM.trees.....of.total.basal.area.of.all.AM.and.EcM.tees.taken.together.
 map$SRR.id <- as.character(map$SRR.id)
 rownames(map) <- map$SRR.id
-map <- map[,.(tedersoo.code,SRR.id,Site,longitude,latitude,pH,Moisture,N,C,C_N,human.date,doy,epoch.date,NPP,forest,conifer,relEM)]
-setnames(map,c('tedersoo.code','Moisture','N' ,'C' ,'C_N'),
-             c('Mapping.ID'   ,'moisture','pN','pC','cn' ))
+map <- map[,.(tedersoo.code,SRR.id,Site,longitude,latitude,pH,Moisture,N,C,C_N,human.date,doy,epoch.date,NPP,forest,conifer,relEM,LogP,LogK,LogMg,LogCa)]
+setnames(map,c('tedersoo.code','Moisture','N' ,'C' ,'C_N','LogP','LogK','LogMg','LogCa'),
+             c('Mapping.ID'   ,'moisture','pN','pC','cn','P','K','Mg','Ca'))
 map <- as.data.frame(map)
 
 #get worldclim2 cliamte variables and aridity index.----
