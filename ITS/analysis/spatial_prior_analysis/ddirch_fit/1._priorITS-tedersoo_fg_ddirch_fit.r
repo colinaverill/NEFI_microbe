@@ -17,14 +17,14 @@ n.cores <- detectCores()
 registerDoParallel(cores=n.cores)
 
 #set output path.----
-output.path <- ted_ITS.prior_fg_JAGSfit
+output.path <- ted_ITS.prior_fg_JAGSfit_micronutrient
 
 #load tedersoo data.----
 d <- data.table(readRDS(tedersoo_ITS_clean_map.path))
 #d <- d[1:35,] #for testing
 y <- readRDS(tedersoo_ITS_fg_list.path)
 y <- y$abundances
-d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM)]
+d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM,P,K,Ca,Mg)]
 d <- d[complete.cases(d),] #optional. This works with missing data.
 y <- y[rownames(y) %in% d$SRR.id,]
 
@@ -42,8 +42,8 @@ x <- d[,.(intercept,pC,cn,pH,moisture,NPP,mat,map,forest,conifer,relEM)]
 
 #define multiple subsets
 x.clim <- d[,.(intercept,NPP,mat,map)]
-x.site <- d[,.(intercept,pC,cn,pH,forest,conifer,relEM)]
-x.all  <- d[,.(intercept,pC,cn,pH,NPP,mat,map,forest,conifer,relEM)]
+x.site <- d[,.(intercept,pC,cn,pH,forest,conifer,relEM,P,K,Ca,Mg)]
+x.all  <- d[,.(intercept,pC,cn,pH,NPP,mat,map,forest,conifer,relEM,P,K,Ca,Mg)]
 x.list <- list(x.clim,x.site,x.all)
 
 #fit model using function.----
