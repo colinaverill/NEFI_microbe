@@ -56,7 +56,9 @@ polygon(par.d, col = adjustcolor(cols[2],trans))
 polygon(pro.d_xy, col = adjustcolor(cols[3],trans), fillOddEven = F)
 mtext('Density', side = 2, line = 2.2, cex = o.cex)
 mtext('relative contribution to uncertainty', side = 1, line = 2.5, cex = o.cex)
-legend(x = 0.7, y = 40, legend = c('covariate','parameter','process'), col ='black', pt.bg=adjustcolor(cols,trans), bty = 'n', pch = 22, pt.cex = 1.5)
+legend(x = 0.7, y = 40, legend = c('covariate','parameter','process'), 
+       col ='black', pt.bg=adjustcolor(cols,trans), 
+       bty = 'n', pch = 22, pt.cex = 1.5)
 
 #end plot.----
 dev.off()

@@ -28,7 +28,7 @@ site.var <- 4
 #This takes a real long time. Function automatically detects number of available processors.
 cat('Running simulation...\n');tic()
 run <- ddirch_obs_uncertainty(site_mu, site.var = site.var, plot.var = plot.var, core.var = core.var,
-                              n.sim = 100)
+                              n.sim = 1000)
 cat('Simulation complete.\n');toc()
 
 #Save output.----
