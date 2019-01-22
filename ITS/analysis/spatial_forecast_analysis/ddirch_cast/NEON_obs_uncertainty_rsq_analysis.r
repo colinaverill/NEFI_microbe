@@ -10,11 +10,13 @@ source('NEFI_functions/tic_toc.r')
 output.path <- ITS_NEON_observation_uncertainty.path
 
 #Generate site values, set parameters.----
+set.seed(1234)
 n.site <- 13
-y1 <- runif(n.site, 0.1, 0.9)    #abundant taxon.
+y1 <- runif(n.site, 0.1, 0.9)    #abundant taxon, varies alot.
 y2 <- runif(n.site, 0.001, 0.01) #rare taxon.
-y3 <- 1 - (y1 + y2)              #'other' so we sum to 1.
-site_mu <- as.matrix(data.frame(y1,y2,y3))
+y3 <- runif(n.site, 0.1, 0.2)    #abudant taxon, varies comparatively less.
+y4 <- 1 - (y1 + y2 + y3)              #'other' so we sum to 1.
+site_mu <- as.matrix(data.frame(y1,y2,y3,y4))
 
 #assign variances, higher number means lower variance.
 #These are based on Harvard Forest and Dopheide 2018 intra-core uncertainty.
