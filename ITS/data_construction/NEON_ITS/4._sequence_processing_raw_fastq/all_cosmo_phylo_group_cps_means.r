@@ -44,6 +44,7 @@ foreach(i = 1:length(d)) %dopar% {
     colnames(fit$plot.fit[[j]]) <- colnames(y)
     colnames(fit$site.fit[[j]]) <- colnames(y)
   }
+  fit$core.fit <- y #add in the core-level data!
   return(fit)
 }
 names(output) <- names(d)
