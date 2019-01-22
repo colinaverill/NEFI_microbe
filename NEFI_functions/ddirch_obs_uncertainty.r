@@ -98,6 +98,7 @@ ddirch_obs_uncertainty <- function(site_mu,
         y.obs$plotID <- substr(y.obs$coreID, 1, nchar(y.obs$coreID) - 2)
         
         #2. Aggregate to plot and site scale.----
+        #I should maybe use JAGS here instead...
         #Plot scale aggregation.
         suppressWarnings(
           y.obs$Y <- DR_data(y.obs[,grep('y',colnames(y.obs))])

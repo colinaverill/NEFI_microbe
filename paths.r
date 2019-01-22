@@ -152,6 +152,7 @@ NEON_ddirch_var.importance_fg_figure.path <- paste0(dir,'NEON_ddirch_var.importa
 NEON_ddirch_var.importance_cosmo_figure.path <- paste0(dir,'NEON_ddirch_var.importance_fg.png')
 NEON_cps_rep.groups_forecast_figure.path <- paste0(dir,'NEON_cps_rep.groups_forecast_figure.png')
 NEON_cps_out.of.sample_rsq_density_figure.path <- paste0(dir,'NEON_cps_out.of.sample_rsq_density_figure.png')
+ddirch_variance_decomposition_all.fungi.path <- paste0(dir,'ddirch_variance_decomposition_all.fungi.rds')
 
 #calibration figures.
 ITS_prior_r2_distribution.density_figure.path <- paste0(dir,'ITS_prior_r2_distribution.density_figure.png')
@@ -285,6 +286,7 @@ NEON_phyla_variable_importance_data.path <- paste0(dir,'NEON_phyla_variable_impo
 NEON_ddirch_var.decomp_fg.path <- paste0(dir,'NEON_ddirch_var.decomp_fg.rds')
 NEON_ddirch_var.decomp_cosmo.path <- paste0(dir,'NEON_ddirch_var.decomp_cosmo.rds')
 NEON_ddirch_var.decomp_phyla.path <- paste0(dir,'NEON_ddirch_var.decomp_phyla.rds')
+NEON_ddirch_var.decomp_all_groups.path <- paste0(dir,'NEON_ddirch_var.decomp_all_groups.rds')
 
 #dmulti-ddirch forecasts, variance decomposition and variable importance output.
 NEON_dmulti.ddirch_fcast_fg.path <- paste0(dir,'NEON_dmulti.ddirch_fcast_fg.rds')
