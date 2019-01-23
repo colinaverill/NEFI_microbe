@@ -13,6 +13,9 @@ cal <- readRDS(ted_ITS_prior_phylo.group_JAGSfits)
 #out of sample forecast to all phylo levels
 fcast <- readRDS(NEON_site_fcast_all_phylo_levels.path)
 
+#site level data.
+site <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq.path)
+
 #validation data for forecasts.
 d <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq.path)
 d <- readRDS('/fs/data3/caverill/phylo_cps.rds')
@@ -53,6 +56,7 @@ for(i in 1:length(d)){
   rsq.1 <- list()
   abundance <- list()
   variance  <- list()
+  range     <- list()
   for(j in 1:ncol(obs)){
     #get best-fit rsq.
     mod <- lm(obs[,j] ~ pred[,j])
@@ -62,17 +66,20 @@ for(i in 1:length(d)){
     tss <- sum((obs[,j] - mean(obs[,j])) ^ 2)  ## total sum of squares
     rsq.1[[j]] <- 1 - rss/tss
     abundance[[j]] <- boot::inv.logit(mean(boot::logit(obs[,j])))
-     variance[[j]] <- boot::inv.logit(sd(boot::logit(obs[,j])))
+     variance[[j]] <- boot::inv.logit(  sd(boot::logit(obs[,j])))
+        range[[j]] <- max(obs[,j]) - min(obs[,j])
   }
         rsq <- data.frame(unlist(rsq))
       rsq.1 <- data.frame(unlist(rsq.1))
   abundance <- data.frame(unlist(abundance))
    variance <- data.frame(unlist(variance))
-  rsq <- cbind(colnames(obs), rsq, rsq.1,abundance, variance)
-  colnames(rsq) <- c('group','rsq','rsq.1','val_abundance','val_variance')
+      range <- data.frame(unlist(range))
+  rsq <- cbind(colnames(obs), rsq, rsq.1,abundance, variance,range)
+  colnames(rsq) <- c('group','rsq','rsq.1','val_abundance','val_variance','range')
   
   rsq$group <- as.character(rsq$group)
   div.merge <- div[[i]]$group_frequencies
+  rsq <- rsq[-grep('other',rsq$group),]
   rsq <- merge(rsq, div.merge, by.x = 'group', by.y = 'groups', all.x = T)
   rsq <- merge(rsq, cal.rsq, all.x = T)
   rsq <- rsq[!(names(rsq) %in% 'other')]
@@ -84,17 +91,19 @@ test <- do.call(rbind, output1)
 test$rsq.1 <- ifelse(test$rsq.1 < 0, 0, test$rsq.1)
 test$rsq_bin <- ifelse(test$rsq.1 == 0, 0, 1)
 
-#if rsq.1 is less than 0, set it to zero.
-mod <- lm((rsq.1) ~ val_abundance + val_variance + N.SVs , 
-          data = test[test$rsq.1 > 0,])
-summary(mod)
-plot(mod$model$`(rsq.1)` ~ mod$fitted.values)
-abline(lm(mod$model$`(rsq.1)`  ~ mod$fitted.values), lwd =2)
+#Model the R2 values.----
+mod <- lm(rsq.1 ~  val_variance, data = test[test$cal_rsq > 0.1,]);summary(mod)
+plot(mod$model$rsq.1 ~ mod$fitted.values)
+abline(lm(mod$model$rsq.1  ~ mod$fitted.values), lwd =2)
 
 #predict whether or not rsq 1:1 is zero.
-mod2 <- glm(rsq_bin ~ val_abundance + val_variance  + log(N.SVs),
-            data = test[test$cal_rsq > 0.2,], family = binomial)
+mod2 <- glm(rsq_bin ~ val_abundance + val_variance  + (N.SVs),
+            data = test[test$cal_rsq > 0.1,], family = binomial)
 summary(mod2); paste0('rsq = ',round(1 - mod2$deviance / mod2$null.deviance,2))
+
+#calibration R2
+mod <- lm(cal_rsq ~ log(val_abundance) + log(val_variance) + (N.SVs), data = test[test$cal_rsq > 0.1,]);summary(mod)
+
 
 #plot results.----
 #out of sample rsq vs. calibration.

@@ -114,6 +114,8 @@ ITS.prior_linear_fg_cov.selection_JAGS <- paste0(dir,'ITS.prior_linear_fg_cov.se
 ted_ITS_prior_phylo.group_JAGSfits <- paste0(dir,'ted_ITS.pror_phylo.groups_JAGSfits.rds')
 ted_ITS_prior_phylo.group_JAGSfits_micronutrient <- paste0(dir,'ted_ITS.pror_phylo.groups_JAGSfits_micronutrient.rds')
 ITS_NEON_observation_uncertainty.path <- paste0(dir,'ITS_NEON_observation_uncertainty.rds')
+ITS_NEON_observation_uncertainty_core.effort.path <- paste0(dir,'ITS_NEON_observation_uncertainty_core.effort.rds')
+ITS_NEON_observation_uncertainty_plot.effort.path <- paste0(dir,'ITS_NEON_observation_uncertainty_plot.effort.rds')
 
 #dmulti-ddirch output, fit with fastq-derived data.
 ted_ITS.prior_dmulti.ddirch_fg_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_fg_JAGSfit.rds')

@@ -38,7 +38,7 @@ module load R/3.4.0
 cd /projectnb/talbot-lab-data/caverill/NEFI_microbe
 #
 # in the directory specified above, invoke this function:
-Rscript ITS/analysis/spatial_forecast_analysis/ddirch_cast/NEON_obs_uncertainty_rsq_analysis.r
+Rscript ITS/analysis/NEON_design_power_analysis/NEON_obs_uncertainty_rsq_analysis.r
 #
 #
 #End of commands.

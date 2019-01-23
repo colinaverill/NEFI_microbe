@@ -8,6 +8,7 @@ output.path <- ITS_prior_r2_distribution.density_figure.path
 
 #load data.----
 fg <- readRDS(ted_ITS.prior_fg_JAGSfit)
+fg <- readRDS(ted_ITS.prior_fg_JAGSfit_micronutrient)
 pl <- readRDS(ted_ITS_prior_phylo.group_JAGSfits)
 
 #loop over lists and get R2 values.----
@@ -63,7 +64,7 @@ o.cex <- 1.3 #outer label size.
 par(mfrow = c(1,1), mar = c(4.2,4.2,1.5,1.5))
 
 #plot.
-plot(h,xlim = c(0, 0.8), ylim = c(0, round(max(h$y), 0)), bty = 'n', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
+plot(h,xlim = c(0, 0.8), ylim = c(0, round(max(h$y), 0)), bty = 'n', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1)
 polygon(h, col = adjustcolor('purple',trans), border = NA)
 mtext('Density', side = 2, line = 2.2, cex = o.cex)
 mtext(expression(paste("Calibration R"^"2")), side = 1, line = 2.5, cex = o.cex)
