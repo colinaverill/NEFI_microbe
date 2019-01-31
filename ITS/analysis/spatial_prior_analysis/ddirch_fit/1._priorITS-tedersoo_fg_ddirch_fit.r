@@ -28,7 +28,7 @@ y <- y$abundances
 d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM,P,K,Ca,Mg)]
 d <- d[complete.cases(d),] #optional. This works with missing data.
 y <- y[rownames(y) %in% d$SRR.id,]
-
+d <- d[d$SRR.id %in% rownames(y),]
 
 #Add 1 to all abundances. dirichlet cannot handle hard zeros.----
 y <- y + 1

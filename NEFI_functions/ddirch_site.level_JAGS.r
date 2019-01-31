@@ -54,14 +54,14 @@ site.level_dirlichet_jags     <- function(y,
   y <- as.matrix(y)
   x_mu <- as.matrix(x_mu)
   
-  ###setup jags data object.
+  ###setup jags data object.----
   jags.data <- list(N = nrow(y), N.spp = ncol(y), #number of observations and number of species
                     N.preds = ncol(x_mu),    #number of x predictors
                     x_mu = x_mu,                  #x-value mean matrix
                     x_precision = x_precision,    #x-value precision matrix
                     y = y)                        #species matrix, y
   
-  ###specify JAGS model.
+  ###specify JAGS model.----
   jags.model = "
   model {
   #parameter priors for each species.
@@ -118,7 +118,7 @@ site.level_dirlichet_jags     <- function(y,
   } #close model loop.
   "
   
-  ###Fit JAGS model.
+  ###Fit JAGS model.----
   #parallel or not parallel.
   run.method <- 'rjags'
   if(parallel == T){
@@ -137,7 +137,7 @@ site.level_dirlichet_jags     <- function(y,
   #summarize output
   out <- summary(jags.out)
   
-  #grab parmeters by species, make a list of species-parameter dataframes
+  #grab parmeters by species, make a list of species-parameter dataframes----
   output.list <- list()
   for(i in 1:ncol(y)){
     z <- out[grep("^x\\.m\\[",rownames(out), value = T),]
@@ -171,7 +171,7 @@ site.level_dirlichet_jags     <- function(y,
   #get deviance score.
   deviance <- out[grep('deviance',rownames(out)),]
   
-  #make a super output that also returns model
+  #make a super output that also returns model.-----
   super.list <- list(jags.out, output.list,predicted,y,resid,deviance,x.mm,alpha)
   names(super.list) <- c('jags_model','species_parameter_output','predicted','observed','residual','deviance','x.mm','alpha')
   
