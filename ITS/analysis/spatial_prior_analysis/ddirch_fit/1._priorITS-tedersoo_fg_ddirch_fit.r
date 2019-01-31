@@ -51,11 +51,15 @@ x.list <- list(x.clim,x.site,x.all)
 #This take a long time to run, probably because there is so much going on.
 #fit <- site.level_dirlichet_jags(y=y,x_mu=x,adapt = 50, burnin = 50, sample = 100)
 #for running production fit on remote.
-output.list<-
-  foreach(i = 1:length(x.list)) %dopar% {
+#output.list<-
+#  foreach(i = 1:length(x.list)) %dopar% {
+output.list <- list()
+for(i in 1:length(x.list)){
     fit <- site.level_dirlichet_jags(y=y,x_mu=x.list[i],adapt = 500, burnin = 1000, sample = 1000, 
-                                     parallel = T, parallel_method = 'parallel')
-    return(fit)
+                                     parallel = T)
+                                     #parallel = T, parallel_method = 'parallel')
+    #return(fit)
+    output.list[[i]] <- fit
   }
 
 #get intercept only fit.
