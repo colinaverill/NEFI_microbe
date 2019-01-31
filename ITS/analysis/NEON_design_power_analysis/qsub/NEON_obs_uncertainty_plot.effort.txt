@@ -7,7 +7,7 @@
 #$ -l h_rt=80:00:00
 #
 #Use N processors on a single machine.
-#$ -pe omp 48
+#$ -pe omp 36
 #
 #Give the job a name
 #$ -N plot.eff

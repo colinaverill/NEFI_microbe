@@ -34,7 +34,7 @@ cat('Running simulation...\n');tic()
 site_output <- list()
 for(i in 1:length(plots.per.site)){
   run <- ddirch_obs_uncertainty(site_mu, site.var = site.var, plot.var = plot.var, core.var = core.var, 
-                                n.sim = 100, n.site = plots.per.site[i])
+                                n.sim = 100, n.plot = plots.per.site[i])
   site_output[[i]] <- run
   cat(i,'of',length(plots.per.site),'simulations complete. ');toc()
 }
