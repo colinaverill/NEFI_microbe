@@ -31,6 +31,7 @@ site.level_dirlichet_jags     <- function(y,
   #core level. First column needs to be intercept, a vector of 1s.
   if(mean(x_mu[,1]) != 1){stop('First column in x_mu is not a vector of 1s for the intercept. This needs to be or this function doesnt work.')}
   if(ncol(x_mu) < 2){stop('We need an intercept and at least one predictor for this to work. x_mu has less than 2 columns. Try again buddy.')}
+  if(length(y) != nrow(x_mu)){stop('Number of y observations does not match the number of rows in the predictor matrix.')}
   
   #grab names
   y.names <- colnames(y)

@@ -4,12 +4,12 @@ source('paths.r')
 
 #Set output path motif for multiple plot outputs.----
 #setting output path motif. Number of output paths depends on number of taxa we are plotting. 25 per panel.
-output.path_motif <- 'test'
+#output.path_motif <- 'test'
 output.path_motif <- ITS_prior_calibration_fits.path
 
 #load data.----
-fg <- readRDS(ted_ITS.prior_fg_JAGSfit)
-pl <- readRDS(ted_ITS_prior_phylo.group_JAGSfits)
+fg <- readRDS(ted_ITS.prior_fg_JAGSfit_micronutrient)
+pl <- readRDS(ted_ITS_prior_phylo.group_JAGSfits_micronutrient)
 
 
 #Count number of taxa to be plotted, specify output paths.----
