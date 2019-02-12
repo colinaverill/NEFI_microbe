@@ -14,14 +14,15 @@ rm(list=ls())
 source('paths.r')
 source('NEFI_functions/precision_matrix_match.r')
 
-#set output path.
+#set output path.-----
 output.path <- hierarch_filled.path
 
-#specify sites with zero ectomycorrhizal trees (plains sites)
+#specify sites with zero ectomycorrhizal trees (plains sites).----
 no.ecm <- c('CPER','STER','WOOD')
 
-#load prior model fit- model fit at site level.
+#load prior model fit- model fit at site level.----
 mod <- readRDS(ted_ITS.prior_fg_JAGSfit)
+mod <- readRDS(ted_ITS.prior_fg_JAGSfit_micronutrient)
 preds <- mod$all.preds$species_parameter_output$other$predictor
 if('relEM' %in% preds){preds <- c(as.character(preds),'b.relEM')}
 #add plot, site and sampleID to preds.
@@ -29,7 +30,7 @@ keys <- c('sampleID','plotID','siteID')
 check <- c(as.character(preds),keys)
 check_sd <-c(paste0(as.character(preds), '_sd'), keys)
 
-#load NEON data.
+#load NEON data.----
 core_obs  <- readRDS( core_obs.path)
 core_core <- readRDS(core_core.path)
 core_plot <- readRDS(core_plot.path)
@@ -41,14 +42,14 @@ plot_glob <- readRDS(plot_glob.path)
 site_site <- readRDS(site_site.path)
 site_glob <- readRDS(site_glob.path)
 
-#cores, plots and sites that need to be present.
+#cores, plots and sites that need to be present.-----
 needed <- list()
 needed[[1]] <- as.character(unique(core_obs$geneticSampleID))
 needed[[2]] <- as.character(unique(core_obs$plotID))
 needed[[3]] <- as.character(unique(core_obs$siteID))
 names(needed) <- c('geneticSampleID','plotID','siteID')
 
-#all y-cores present in core_core geneticSampleIDs?
+#all y-cores present in core_core geneticSampleIDs?----
 sum(unique(core_obs$geneticSampleID) %in% core_core$geneticSampleID) == length(unique(core_obs$geneticSampleID))
 nrow(core_obs) == nrow(core_core)
 #all plots in core_core present in core_plot?
@@ -62,9 +63,7 @@ sum(unique(plot_plot$siteID) %in% plot_site$siteID) == length(unique(plot_plot$s
 #all y-sites present in site_site siteIDs?
 sum(unique(core_obs$siteID) %in% site_site$siteID) == length(unique(core_obs$siteID))
 
-
-
-#Get core-plot-site indexing variables.
+#Get core-plot-site indexing variables.-----
 sites <- site_site$siteID
 plots <- plot_plot$plotID
 cores <- core_core$sampleID
@@ -72,7 +71,7 @@ plot.site <- substring(plots,1,4)
 core.plot <- substring(cores,1,8)
 core.site <- substring(cores,1,4)
 
-#subset based on predictors actually in the model.
+#subset based on predictors actually in the model.----
 core_site_mu <- core_site[,colnames(core_site) %in% (check   )]
 core_site_sd <- core_site[,colnames(core_site) %in% (check_sd)]
 core_site_sd <- precision_matrix_match(core_site_mu,core_site_sd)
@@ -92,7 +91,7 @@ site_site_mu <- site_site[,colnames(site_site) %in% (check   )]
 site_site_sd <- site_site[,colnames(site_site) %in% (check_sd)]
 site_site_sd <- precision_matrix_match(site_site_mu,site_site_sd)
 
-#Step 1. Missing data model. Assign missing means and sd hierarchically as necessary
+#Step 1. Missing data model. Assign missing means and sd hierarchically as necessary.----
 #core_site
 for(j in 1:ncol(core_site_mu)){
   name <- colnames(core_site_mu)[j]

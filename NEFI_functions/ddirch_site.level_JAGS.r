@@ -38,10 +38,6 @@ site.level_dirlichet_jags     <- function(y,
   x.names <- colnames(x_mu)
 
   ###massage your data together.
-  #deal with zero relative abundances.
-  y <- data.frame(y)
-  #y <- data.frame(lapply(y, crib_fun))
-  
   #make sd objects if they were not supplied.
   if(is.na(x_sd)){x_sd = data.frame(rep(1,nrow(x_mu)))}
 
@@ -51,7 +47,7 @@ site.level_dirlichet_jags     <- function(y,
   #covert sd to precision. output is matrix.
   x_precision <- sd_to_precision(x_sd)
 
-  #make sure every else is a matrix.
+  #make sure everything is a matrix.
   y <- as.matrix(y)
   x_mu <- as.matrix(x_mu)
   

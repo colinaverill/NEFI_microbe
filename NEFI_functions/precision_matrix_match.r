@@ -37,7 +37,7 @@ precision_matrix_match <- function(a,b){
   #give these columns a sd value of 0.01, which corresponds to a precision of 10000
   to_add <- colnames(a)[!(colnames(a) %in% colnames(b))]
   new.precision <- matrix(ncol = length(to_add), nrow = nrow(b))
-  new.precision[,] <- 0.01
+  new.precision[,] <- 0.0001
   colnames(new.precision) <- to_add
   b <- cbind(b,new.precision)
   #order the precision matrix columns to match x_mu matrix.

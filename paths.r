@@ -139,6 +139,11 @@ NEON_SV.table.path <- paste0(ITS_scc_gen_dir,'NEON_SV.table.rds')
      NEON_ITS_fastq_tax.path <- paste0(ITS_scc_gen_dir,'NEON_fastq_tax.rds')
      NEON_ITS_fastq_fun.path <- paste0(ITS_scc_gen_dir,'NEON_fastq_fun.rds')
           
+#### 16S/pecan_gen: P conversion tables.----
+dir <- pecan_gen_16S_dir
+oxalate_olsen_P.conv_data.path <- paste0(dir,'P_oxalate_olsen_Wunscher.csv')
+olsen_AL_P.conv_data.path <- paste0(dir,'P_AL_olsen_mehlich_Erikkson.csv')
+
 #### ITS/pecan_gen: Figures.----
 dir <- paste0(ITS_pecan_gen_dir,'figures/')
 cmd <- paste0('mkdir -p ',dir)
@@ -211,7 +216,10 @@ system(cmd)
     dp1.10086.00_output.path <- paste0(dir,'dp1.10086.00_output.rds')
     dp1.10078.00_output.path <- paste0(dir,'dp1.10078.00_output.rds')
     dp1.10098.00_output.path <- paste0(dir,'dp1.10098.00_output.rds')
+    dp1.10008.00_output.path <- paste0(dir,'DP1.10008.00_output.rds')
+    dp1.10047.00_output.path <- paste0(dir,'dp1.10047.00_output.rds')
 dp1.10098.00_plot.level.path <- paste0(dir,'dp1.10098.00_plot.level.rds')
+micronutrient_converted.path <- paste0(dir,'micronutrient_converted.rds')
 
 #Paths to spatial x and y variables for modeling.
  obs.table.path <- paste0(dir, 'obs.table.rds') 
