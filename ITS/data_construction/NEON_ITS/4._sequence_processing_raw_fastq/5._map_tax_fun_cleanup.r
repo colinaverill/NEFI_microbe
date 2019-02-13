@@ -6,9 +6,10 @@ library(data.table)
 source('paths.r')
 
 #set output paths.----
-   sv_output.path <- NEON_ITS_fastq_SV.table_clean.path
-sv_1k_output.path <- NEON_ITS_fastq_SV.table_clean_1k_rare.path
-  fun_output.path <- NEON_ITS_fastq_fun_clean.path
+    sv_output.path <- NEON_ITS_fastq_SV.table_clean.path
+ sv_1k_output.path <- NEON_ITS_fastq_SV.table_clean_1k_rare.path
+   fun_output.path <- NEON_ITS_fastq_fun_clean.path
+fun_1k_output.path <- NEON_ITS_fastq_fun_clean_1k_rare.path
 
 #load data.----
 sv <- readRDS(NEON_ITS_fastq_SV.table.path)
@@ -33,24 +34,32 @@ map$seq.depth <- rowSums(sv)
 map <- map[map$seq.depth > 1000,]
 sv <- sv[rownames(sv) %in% rownames(map),]
 
-#kill SVs that no longer have any sequences or are now singletons.----
-sv.filter <- data.frame(colnames(sv),colSums(sv))
-colnames(sv.filter) <- c('sv.ID','n.seqs')
-to_remove <- sv.filter[sv.filter$n.seqs < 2,]$sv.ID
-sv <-  sv[,!(colnames(sv) %in% to_remove) ]
+#kill SVs that no longer have any sequences or are not fungi.----
+to_remove <- colnames(sv[,colSums(sv) == 0])
+fungi.check <- rownames(fun[fun$kingdom != 'Fungi' | is.na(fun$kingdom),])
+to_remove <- c(to_remove, fungi.check)
+ sv <-  sv[,!(colnames(sv) %in% to_remove) ]
 fun <- fun[!(rownames(fun) %in% to_remove),]
 tax <- tax[!(rownames(tax) %in% to_remove),]
 
-#remove taxa that do not assign to fungi.----
-to_remove <- rownames(fun[is.na(fun$kingdom),])
-fun <- fun[!(rownames(fun) %in% to_remove),]
-sv <-  sv[,!(colnames(sv) %in% to_remove) ]
-
 #rarefy SV table to 1k reads/sample.----
-sv.1k.rare <- vegan::rrarefy(sv, 1000)
-sv.1k.rare <- sv.1k.rare[,rowSums(sv.1k.rare) > 0]
+sv.1k <- vegan::rrarefy(sv, 1000)
+sv.1k <- sv.1k[,colSums(sv.1k) > 0]
+
+#Build phylo-functional group taxonomy tables.----
+fg <- data.table(fun)
+fg[grep('Arbuscular'     , guild), fg := 'Arbuscular'     ]
+fg[grep('Pathogen'       , guild), fg := 'Pathogen'       ]
+fg[grep('Saprotroph'     , guild), fg := 'Saprotroph'     ]
+fg[grep('Ectomycorrhizal', guild), fg := 'Ectomycorrhizal']
+fg <- fg[,.(kingdom, phylum, class, order, family, genus, species, fg)]
+fg <- as.data.frame(fg)
+rownames(fg) <- rownames(fun)
+fg.1k <- fg[rownames(fg) %in% colnames(sv.1k),]
+
 
 #save output.----
-saveRDS(        sv,    sv_output.path)
-saveRDS(sv.1k.rare, sv_1k_output.path)
-saveRDS(       fun,   fun_output.path)
+saveRDS(sv   ,    sv_output.path)
+saveRDS(sv.1k, sv_1k_output.path)
+saveRDS(fg   ,   fun_output.path)
+saveRDS(fg.1k,fun_1k_output.path)

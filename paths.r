@@ -252,6 +252,7 @@ NEON_SV.table_clean.path <- paste0(dir,'NEON_SV.table_clean.rds')
 NEON_ITS_fastq_SV.table_clean.path <- paste0(dir,'NEON_ITS_fastq_SV.table_clean.rds')
 NEON_ITS_fastq_SV.table_clean_1k_rare.path <- paste0(dir,'NEON_ITS_fastq_SV.table_clean_1k_rare.rds')
      NEON_ITS_fastq_fun_clean.path <- paste0(dir,'NEON_ITS_fastq_fun_clean.rds')
+NEON_ITS_fastq_fun_clean_1k_rare.path <- paste0(dir,'NEON_ITS_fastq_fun_clean_1k_rare.rds')
 
 #### ITS/pecan_gen: Forecast covariate paths.----
 #Aggregated NEON site level covariates and global level uncertainty for predictors
@@ -272,6 +273,7 @@ NEON_plot.level_genera_obs.path <- paste0(dir,'NEON_plot.level_genera_obs.rds')
 NEON_ITS_fastq_yeast_taxa.path <- paste0(dir,'NEON_ITS_fastq_yeast_taxa.rds')
 NEON_ITS_fastq_cosmo_genera.path <- paste0(dir,'NEON_ITS_fastq_cosmo_genera.rds')
 NEON_ITS_fastq_all_cosmo_phylo_groups.path <- paste0(dir,'NEON_ITS_fastq_all_cosmo_phylo_groups.rds')
+NEON_ITS_fastq_all_cosmo_phylo_groups_1k_rare.path <- paste0(dir,'NEON_ITS_fastq_all_cosmo_phylo_groups.rds')
 NEON_ITS_fastq_phyla.path <- paste0(dir,'NEON_ITS_fastq_phyla.rds')
 NEON_plot.level_fg_obs_fastq.path <- paste0(dir,'NEON_plot.level_fg_obs_fastq.rds')
 NEON_site.level_fg_obs_fastq.path <- paste0(dir,'NEON_site.level_fg_obs_fastq.rds')
@@ -282,7 +284,7 @@ NEON_site.level_yeast_obs_fastq.path <- paste0(dir,'NEON_site.level_yeast_obs_fa
 NEON_plot.level_phyla_obs_fastq.path <- paste0(dir,'NEON_plot.level_phyla_obs_fastq.rds')
 NEON_site.level_phyla_obs_fastq.path <- paste0(dir,'NEON_site.level_phyla_obs_fastq.rds')
 NEON_all.phylo.levels_plot.site_obs_fastq.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq.path')
-
+NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.rds')
 
 #### ITS/pecan_gen: Forecasts, variance decomposition and variable importance output paths.----
 dir <- paste0(ITS_pecan_gen_dir,'NEON_forecasts/')

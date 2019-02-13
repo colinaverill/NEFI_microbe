@@ -25,7 +25,7 @@ d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM)]
 #d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM,P,K,Ca,Mg)] #with micronutrients.
 d <- d[complete.cases(d),] #optional. This works with missing data.
 d <- d[d$SRR.id %in% rownames(y[[1]]$abundances),]
-d <- d[1:35,] #for testing
+#d <- d[1:35,] #for testing
 
 #Drop in intercept, setup predictor matrix.
 x <- d
