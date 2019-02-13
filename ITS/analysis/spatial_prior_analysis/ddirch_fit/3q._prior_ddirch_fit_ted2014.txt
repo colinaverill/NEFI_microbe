@@ -1,0 +1,46 @@
+#!/bin/bash -l
+# qsun for fitting functional group models.
+########################################
+####      commands for scc qsub     ####
+########################################
+#Specfiy hard time limit for the job.
+#$ -l h_rt=80:00:00
+#
+#Use N processors on a single machine. Running 3 chains in parallel, but i think a 4th will make things move better.
+#$ -pe omp 36
+#
+#Give the job a name
+#$ -N prior_JAGS
+#
+# Merge stderr into the stdout file, to reduce clutter
+#$ -j y
+#$ -o $JOB_NAME.log
+#
+#
+# Have the system send mail when the job begins and when the job is aborted or ended
+#$ -m ae
+#
+# Inherit the current environment (load modules python/2.7.7, qiime, and find binaries)
+# Make sure th load those modules in the command line before you submit the qsub
+#$ -V 
+#
+# end of qsub arguments
+#
+########################################
+#### begin commands to run R script ####
+########################################
+#
+#
+# load necessary modules 
+module load R/3.4.0
+module load jags
+#
+# cd into project directory.
+cd /projectnb/talbot-lab-data/caverill/NEFI_microbe
+#
+# in the directory specified above, invoke this function:
+Rscript ITS/analysis/spatial_prior_analysis/ddirch_fit/3._prior_ddirch_fit_ted2014.r
+#
+#
+#End of commands.
+#

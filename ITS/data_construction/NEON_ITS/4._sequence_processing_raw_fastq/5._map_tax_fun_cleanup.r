@@ -6,8 +6,9 @@ library(data.table)
 source('paths.r')
 
 #set output paths.----
-sv_output.path <- NEON_ITS_fastq_SV.table_clean.path
-fun_output.path <- NEON_ITS_fastq_fun_clean.path
+   sv_output.path <- NEON_ITS_fastq_SV.table_clean.path
+sv_1k_output.path <- NEON_ITS_fastq_SV.table_clean_1k_rare.path
+  fun_output.path <- NEON_ITS_fastq_fun_clean.path
 
 #load data.----
 sv <- readRDS(NEON_ITS_fastq_SV.table.path)
@@ -27,9 +28,9 @@ rownames(map) <- map$geneticSampleID
 map <- map[order(rownames(map)),]
 sv <-  sv[order(rownames( sv)),]
 
-#remove samples with less than 250 reads from map and sv.----
+#remove samples with less than 1000 reads from map and sv.----
 map$seq.depth <- rowSums(sv)
-map <- map[map$seq.depth > 250,]
+map <- map[map$seq.depth > 1000,]
 sv <- sv[rownames(sv) %in% rownames(map),]
 
 #kill SVs that no longer have any sequences or are now singletons.----
@@ -45,6 +46,11 @@ to_remove <- rownames(fun[is.na(fun$kingdom),])
 fun <- fun[!(rownames(fun) %in% to_remove),]
 sv <-  sv[,!(colnames(sv) %in% to_remove) ]
 
+#rarefy SV table to 1k reads/sample.----
+sv.1k.rare <- vegan::rrarefy(sv, 1000)
+sv.1k.rare <- sv.1k.rare[,rowSums(sv.1k.rare) > 0]
+
 #save output.----
-saveRDS( sv,  sv_output.path)
-saveRDS(fun, fun_output.path)
+saveRDS(        sv,    sv_output.path)
+saveRDS(sv.1k.rare, sv_1k_output.path)
+saveRDS(       fun,   fun_output.path)

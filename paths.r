@@ -113,6 +113,7 @@ ted_ITS.prior_phyla_JAGSfit <- paste0(dir,'ted_ITS.prior_phyla_JAGSfit.rds')
 ITS.prior_linear_fg_cov.selection_JAGS <- paste0(dir,'ITS.prior_linear_fg_cov.selection_JAGS.rds')
 ted_ITS_prior_phylo.group_JAGSfits <- paste0(dir,'ted_ITS.pror_phylo.groups_JAGSfits.rds')
 ted_ITS_prior_phylo.group_JAGSfits_micronutrient <- paste0(dir,'ted_ITS.pror_phylo.groups_JAGSfits_micronutrient.rds')
+ted_ITS_prior_all.groups_JAGSfits.path <- paste0(dir,'ted_ITS_prior_all.groups_JAGSfits.rds')
 ITS_NEON_observation_uncertainty.path <- paste0(dir,'ITS_NEON_observation_uncertainty.rds')
 ITS_NEON_observation_uncertainty_core.effort.path <- paste0(dir,'ITS_NEON_observation_uncertainty_core.effort.rds')
 ITS_NEON_observation_uncertainty_plot.effort.path <- paste0(dir,'ITS_NEON_observation_uncertainty_plot.effort.rds')
@@ -128,7 +129,9 @@ NEON_sampling_effort_analysis_plot.level.path <- paste0(dir,'NEON_sampling_effor
 
 #### ITS/scc_gen: tedersoo 2014 SV and taxonomy paths. ####
 ted_2014_SV.table.path <- paste0(ITS_scc_gen_dir,'ted_2014_SV.table.rds')
+ted_2014_SV.table_1k.rare.path <- paste0(ITS_scc_gen_dir,'ted_2014_SV.table_1k.rare.rds')
      ted_2014_tax.path <- paste0(ITS_scc_gen_dir,'ted_2014_tax.rds') 
+  ted_2014_tax_fg.path <- paste0(ITS_scc_gen_dir,'ted_2014_tax_fg.rds')
      
 #### ITS/scc_gen: NEON to forecast SV and taxonomy paths. ####
 NEON_SV.table.path <- paste0(ITS_scc_gen_dir,'NEON_SV.table.rds')
@@ -204,6 +207,7 @@ tedersoo_ITS.prior_fromSV_analysis.path <- paste0(dir,'tedersoo_ITS.prior_fromSV
     tedersoo_ITS_cosmo_genera_list.path <- paste0(dir,'tedersoo_ITS_cosmo_genera_list.rds')
            tedersoo_ITS_phyla_list.path <- paste0(dir,'tedersoo_ITS_phyla_list.rds')
 tedersoo_ITS_common_phylo_groups_list.path <- paste0(dir,'tedersoo_ITS_common_phylo_groups_list.rds')
+tedersoo_ITS_common_phylo_groups_list_1k.rare.path <- paste0(dir,'tedersoo_ITS_common_phylo_groups_list_1k.rare.rds')
 
 #### ITS/pecan_gen: NEON data aggregation paths. ####
 dir <- paste0(ITS_pecan_gen_dir,'NEON_data_aggregation/')
@@ -246,6 +250,7 @@ NEON_SV.table_clean.path <- paste0(dir,'NEON_SV.table_clean.rds')
      
 #cleanup of NEON fun (which also has taxonomy) and SV tables - DERIVED FROM RAW FASTQ.
 NEON_ITS_fastq_SV.table_clean.path <- paste0(dir,'NEON_ITS_fastq_SV.table_clean.rds')
+NEON_ITS_fastq_SV.table_clean_1k_rare.path <- paste0(dir,'NEON_ITS_fastq_SV.table_clean_1k_rare.rds')
      NEON_ITS_fastq_fun_clean.path <- paste0(dir,'NEON_ITS_fastq_fun_clean.rds')
 
 #### ITS/pecan_gen: Forecast covariate paths.----

@@ -18,11 +18,7 @@ common_group_quantification <- function(sv, tax, groups, tax_level, samp_freq = 
   if(ncol(sv) != nrow(tax)){
     stop('Number of columns of sv table does not match number of rows in taxonomy table.')
   }
-  tax_level <- tolower(tax_level)
-  #make sure taxonomy column names are lower case.
-  tax_names <- c('kingdom','phylum','class','order','family','genus','species')
-  colnames(tax) <- tax_names
-  
+
   #merge taxonomy and sv file.
   k <- cbind(tax, t(sv))
   k <- data.table(k)
@@ -101,7 +97,7 @@ common_group_quantification <- function(sv, tax, groups, tax_level, samp_freq = 
   #get abundances and relative abundances.
           other <- seq_total - rowSums(abundance)
       abundance <- cbind(other, abundance)
-  rel.abundance <- abundance / colSums(abundance)
+  rel.abundance <- abundance / rowSums(abundance)
   
   #return output: abundances, relative abundances, sequence depth, group sample frequencies.
          to_return  <- list(abundance,rel.abundance,seq_total,frequency)
