@@ -21,8 +21,8 @@ d <- data.table(readRDS(tedersoo_ITS_clean_map.path))
 y <- readRDS(tedersoo_ITS_common_phylo_groups_list_1k.rare.path)
 
 #subset to predictors of interest, complete case the thing.
-d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM)]
-#d <- d[,.(SRR.id,pC,cn,pH,moisture,NPP,map,mat,forest,conifer,relEM,P,K,Ca,Mg)] #with micronutrients.
+d <- d[,.(SRR.id,pC,cn,pH,NPP,map,mat,forest,conifer,relEM)]
+#d <- d[,.(SRR.id,pC,cn,pH,NPP,map,mat,forest,conifer,relEM,P,K,Ca,Mg)] #with micronutrients.
 d <- d[complete.cases(d),] #optional. This works with missing data.
 d <- d[d$SRR.id %in% rownames(y[[1]]$abundances),]
 #d <- d[1:35,] #for testing

@@ -13,7 +13,7 @@ tic()
 output.path <- NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path
 
 #load data and format.----
-d <- readRDS(tedersoo_ITS_common_phylo_groups_list_1k.rare.path)
+d <- readRDS(NEON_ITS_fastq_all_cosmo_phylo_groups_1k_rare.path)
 
 #register parallel environment.----
 n.cores <- detectCores()
@@ -46,6 +46,7 @@ output <-
     }
     fit$core.fit <- y #add in the core-level data!
     return(fit)
+    cat(names(d)[i],'model fit.',i,'of',length(d),'groups aggregated.\n')
   }
 names(output) <- names(d)
 

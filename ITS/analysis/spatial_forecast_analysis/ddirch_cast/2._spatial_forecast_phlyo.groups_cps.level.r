@@ -9,13 +9,13 @@ source('NEFI_functions/precision_matrix_match.r')
 source('NEFI_functions/ddirch_forecast.r')
 
 #set output path.----
-output.path <- NEON_site_fcast_all_phylo_levels.path
+output.path <- NEON_site_fcast_all_groups_1k_rare.path
 
 #load model results.----
 #mod 1 is data from maps.
 #mod 2 is site-specific data, no maps.
 #mod 3 is all covariates.
-all.mod <- readRDS(ted_ITS_prior_phylo.group_JAGSfits)
+all.mod <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)
 #mod <- readRDS(ted_ITS.prior_20gen_JAGSfit)
 #mod <- mod[[3]] #just the all predictor case.
 
