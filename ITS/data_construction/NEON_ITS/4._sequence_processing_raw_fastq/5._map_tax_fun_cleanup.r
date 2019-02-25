@@ -57,6 +57,7 @@ fg <- as.data.frame(fg)
 rownames(fg) <- rownames(fun)
 fg.1k <- fg[rownames(fg) %in% colnames(sv.1k),]
 
+#add in sequence variants?
 
 #save output.----
 saveRDS(sv   ,    sv_output.path)
