@@ -49,8 +49,11 @@ sv.1k <- sv.1k[,colSums(sv.1k) > 0]
 #Build phylo-functional group taxonomy tables.----
 fg <- data.table(fun)
 fg[grep('Arbuscular'     , guild), fg := 'Arbuscular'     ]
-fg[grep('Pathogen'       , guild), fg := 'Pathogen'       ]
+#fg[grep('Pathogen'       , guild), fg := 'Pathogen'       ]
+fg[grep('Animal Pathogen', guild), fg := 'Animal_Pathogen']
+fg[grep('Plant Pathogen' , guild), fg := 'Plant_Pathogen' ]
 fg[grep('Saprotroph'     , guild), fg := 'Saprotroph'     ]
+fg[grep('Wood Saprotroph', guild), fg := 'Wood_Saprotroph']
 fg[grep('Ectomycorrhizal', guild), fg := 'Ectomycorrhizal']
 fg <- fg[,.(kingdom, phylum, class, order, family, genus, species, fg)]
 fg <- as.data.frame(fg)

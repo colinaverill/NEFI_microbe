@@ -27,8 +27,11 @@ fg <- data.table(fg)
 #Assign species based on functions you want to trump other functions. 
 #For instance, if something assigns to both SAP and ECM this will have ECM override SAP.
 fg[grep('Arbuscular'     , guild), fg := 'Arbuscular'     ]
-fg[grep('Pathogen'       , guild), fg := 'Pathogen'       ]
+#fg[grep('Pathogen'       , guild), fg := 'Pathogen'       ]
+fg[grep('Plant Pathogen' , guild), fg := 'Plant_Pathogen' ]
+fg[grep('Animal Pathogen', guild), fg := 'Animal_Pathogen']
 fg[grep('Saprotroph'     , guild), fg := 'Saprotroph'     ]
+fg[grep('Wood Saprotroph', guild), fg := 'Wood_Saprotroph']
 fg[grep('Ectomycorrhizal', guild), fg := 'Ectomycorrhizal']
 
 #append functional groups to taxonomy table.----
