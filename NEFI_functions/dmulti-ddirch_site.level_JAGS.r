@@ -20,7 +20,8 @@
 site.level_multi.dirich_jags     <- function(y, seq.depth,
                                              x_mu, 
                                              x_sd = NA,
-                                             adapt = 500, burnin = 1000, sample = 2000, n.chains = 3, parallel = F, silent.jags = F){
+                                             adapt = 500, burnin = 1000, sample = 2000, n.chains = 3, 
+                                             parallel = F, parallel_method = "rjparallel", silent.jags = F){
   #Load some important dependencies.
   source('NEFI_functions/crib_fun.r')
   source('NEFI_functions/sd_to_precision.r')
@@ -118,7 +119,7 @@ site.level_multi.dirich_jags     <- function(y, seq.depth,
   
   ###Fit JAGS model.
   #parallel or not parallel.
-  run.method <- ifelse(parallel == F,'rjags','rjparallel')
+  run.method <- ifelse(parallel == F,'rjags',parallel_method)
   #run jags model.
   jags.out <- runjags::run.jags(   model = jags.model,
                                    data = jags.data,

@@ -7,7 +7,7 @@
 #$ -l h_rt=80:00:00
 #
 #Use N processors on a single machine. Running 3 chains in parallel, but i think a 4th will make things move better.
-#$ -pe omp 10
+#$ -pe omp 36
 #
 #Give the job a name
 #$ -N ted_fg_JAGS
@@ -35,11 +35,8 @@
 module load R/3.4.0
 module load jags
 #
-# cd into project directory.
-/projectnb/talbot-lab-data/caverill/NEFI_microbe
-#
 # in the directory specified above, invoke this function:
-Rscript ITS/analysis/spatial_prior_analysis/3._priorITS.tedersoo_fg_dmulti.ddirch_fit.r
+Rscript ITS/analysis/spatial_prior_analysis/dmulti_ddirch_fit/3._priorITS.tedersoo_all.groups_dmulti.ddirch_fit.r
 #
 #
 #End of commands.
