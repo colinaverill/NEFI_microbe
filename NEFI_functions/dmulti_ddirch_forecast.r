@@ -15,7 +15,7 @@
 #'
 #' @examples
 source('NEFI_functions/precision_matrix_match.r')
-dmulti_ddirch_forecast <- function(mod, seq.depth = 2000, cov_mu, names, cov_sd = NA, n.samp = 1000,
+dmulti_ddirch_forecast <- function(mod, seq.depth = 1000, cov_mu, names, cov_sd = NA, n.samp = 1000,
                                    zero_parameter_uncertainty = F,
                                    zero_covariate_uncertainty = F,
                                      zero_process_uncertainty = F){

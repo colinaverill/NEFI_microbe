@@ -141,6 +141,12 @@ NEON_SV.table.path <- paste0(ITS_scc_gen_dir,'NEON_SV.table.rds')
      NEON_ITS_fastq_SV.table.path <- paste0(ITS_scc_gen_dir,'NEON_fastq_SV.table.rds')
      NEON_ITS_fastq_tax.path <- paste0(ITS_scc_gen_dir,'NEON_fastq_tax.rds')
      NEON_ITS_fastq_fun.path <- paste0(ITS_scc_gen_dir,'NEON_fastq_fun.rds')
+     
+#Aggregated ITS abundances. This was moved from pecan gen because it now takes forever.
+#If you generate this on scc, but save on pecan, it will get overwritten by original pecan file.
+NEON_all.phylo.levels_plot.site_obs_fastq.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq.path')
+NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.rds')
+     
           
 #### 16S/pecan_gen: P conversion tables.----
 dir <- pecan_gen_16S_dir
@@ -283,8 +289,6 @@ NEON_plot.level_yeast_obs_fastq.path <- paste0(dir,'NEON_plot.level_yeast_obs_fa
 NEON_site.level_yeast_obs_fastq.path <- paste0(dir,'NEON_site.level_yeast_obs_fastq.rds')
 NEON_plot.level_phyla_obs_fastq.path <- paste0(dir,'NEON_plot.level_phyla_obs_fastq.rds')
 NEON_site.level_phyla_obs_fastq.path <- paste0(dir,'NEON_site.level_phyla_obs_fastq.rds')
-NEON_all.phylo.levels_plot.site_obs_fastq.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq.path')
-NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.rds')
 
 #### ITS/pecan_gen: Forecasts, variance decomposition and variable importance output paths.----
 dir <- paste0(ITS_pecan_gen_dir,'NEON_forecasts/')

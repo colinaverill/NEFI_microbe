@@ -69,4 +69,4 @@ cat('Script complete. \n')
 
 #fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x, seq.depth = rowSums(y.group),
 #                                    adapt = 200, burnin = 200, sample = 200, 
-#                                    parallel = T, parallel_method = 'rjparallel') #setting parallel rather than rjparallel. 
+#                                    parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 

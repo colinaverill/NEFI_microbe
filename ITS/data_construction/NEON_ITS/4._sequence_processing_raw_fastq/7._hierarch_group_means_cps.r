@@ -26,7 +26,8 @@ output <-
     #Get y multivariate matrix.
     abundances <- d[[i]]$abundances
     seq.depth  <- d[[i]]$seq_total
-    y <- as.matrix((abundances + 1) / rowSums(abundances + 1))
+    #y <- abundances / seq.depth #modified for multinomial dirichlet. Crashes function currently, need a hierarch multinomial dirichlet function.
+    y <- as.matrix((abundances + 1) / rowSums(abundances + 1)) #use this for stanadard dirichlet.
     
     #get core_plot and plot_site indexing.
     core_plot <- substr(rownames(y), 1, 8)
