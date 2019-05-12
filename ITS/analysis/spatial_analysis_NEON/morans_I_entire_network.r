@@ -3,6 +3,9 @@ rm(list=ls())
 source('paths.r')
 library(boot)
 
+#output path.----
+output.path <- 'Moran_I_figure.png'
+
 #logit transform observed values and model residuals?----
 do_logit <- F
 
@@ -87,8 +90,8 @@ for(k in 1:length(d_all)){
   b_out[[k]] <- resid_out
   
 }
-names(a_out) <- names(d_all)
-names(b_out) <- names(d_all)
+names(a_out) <- names(d_all)[1:5]
+names(b_out) <- names(d_all)[1:5]
 
 #calculate average morans I for all groups.----
 a_avg <- list()
@@ -119,10 +122,12 @@ rownames(b_avg) <- names(b_out)
 a_avg$x <- c(2:(nrow(a_avg)), 1)
 b_avg$x <- c(2:(nrow(b_avg)), 1)
 
-#plot.-----
-par(mfrow=c(1,2))
+#setup figure output.----
+png(filename=output.path,width=7,height=7,units='in',res=300)
 
-#Raw spatial signal.----
+#plot.-----
+par(mfrow=c(1,1))
+#Raw spatial signal.
 limy <- c(0, max(a_avg$mu + a_avg$se))
 plot(mu ~ x, data = a_avg, cex = 2, pch = 16, ylim = limy,
      ylab = "Moran's I", xlab = NA, xaxt = 'n')
@@ -138,18 +143,21 @@ x.lab[x.lab == 'fg'] <- 'function_group'
 axis(1, at=a_avg$x, labels=x.lab, cex = 0.8)
 mtext('Spatial Signal',side = 3, line = 0.5, cex = 1.4)
 
+#end plot.----
+dev.off()
+
 #Post model spatial signal.----
-plot(mu ~ x, data = b_avg, cex = 2, pch = 16, ylim = limy,
-     ylab = "Moran's I", xlab = NA, xaxt = 'n')
+#plot(mu ~ x, data = b_avg, cex = 2, pch = 16, ylim = limy,
+#     ylab = "Moran's I", xlab = NA, xaxt = 'n')
 #error bars.
-mu <- b_avg$mu
-x <- b_avg$x
-upr <- mu + b_avg$se
-lwr <- mu - b_avg$se
-arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
+#mu <- b_avg$mu
+#x <- b_avg$x
+#upr <- mu + b_avg$se
+#lwr <- mu - b_avg$se
+#arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
 #x-axis.
-x.lab <- rownames(b_avg)
-x.lab[x.lab == 'fg'] <- 'function_group'
-axis(1, at=b_avg$x, labels=x.lab, cex = 0.8)
-mtext('Spatial Signal Model Residuals',side = 3, line = 0.5, cex = 1.4)
+#x.lab <- rownames(b_avg)
+#x.lab[x.lab == 'fg'] <- 'function_group'
+#axis(1, at=b_avg$x, labels=x.lab, cex = 0.8)
+#mtext('Spatial Signal Model Residuals',side = 3, line = 0.5, cex = 1.4)
 

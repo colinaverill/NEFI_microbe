@@ -5,11 +5,10 @@ source('paths.r')
 source('NEFI_functions/dmulti_ddirch_forecast.r')
 
 #set output path.----
-output.path <- NEON_dmulti.ddirch_fcast_cosmo.path
+output.path <- NEON_dmulti.ddirch_fcast_fg.path
 
 #load model and NEON site predictors..----
-mod <- readRDS(ted_ITS.prior_dmulti.ddirch_cosmo_JAGSfit)
-mod <- mod$all.preds
+all.mod <- readRDS(ted_ITS.prior_dmulti.ddirch_fg_JAGSfit)
 dat <- readRDS(hierarch_filled.path) #NEON site predictors.
 
 #get core-level covariate means and sd.----
@@ -76,16 +75,22 @@ site.sd <- merge(core_sd,plot_sd)
 site.sd <- merge(site.sd,site_sd)
 names(site.sd)[names(site.sd)=='b.relEM'] <- "relEM"
 
-#run forecast.----
-core.fit <- dmulti_ddirch_forecast(mod, cov_mu = core.preds, cov_sd = core.sd, names = core.preds$sampleID)
-plot.fit <- dmulti_ddirch_forecast(mod, cov_mu = plot.preds, cov_sd = plot.sd, names = plot.preds$plotID)
-site.fit <- dmulti_ddirch_forecast(mod, cov_mu = site.preds, cov_sd = site.sd, names = site.preds$siteID)
+#run forecast over all phylo/functional levels.----
+all.output <- list()
+for(i in 1:length(all.mod)){
+       mod <- all.mod[[i]]
+  core.fit <- dmulti_ddirch_forecast(mod, cov_mu = core.preds, cov_sd = core.sd, names = core.preds$sampleID)
+  plot.fit <- dmulti_ddirch_forecast(mod, cov_mu = plot.preds, cov_sd = plot.sd, names = plot.preds$plotID)
+  site.fit <- dmulti_ddirch_forecast(mod, cov_mu = site.preds, cov_sd = site.sd, names = site.preds$siteID)
+  #store output as a list and save.----
+  output <- list(core.fit,plot.fit,site.fit,core.preds,plot.preds,site.preds,core.sd,plot.sd,site.sd)
+  names(output) <- c('core.fit','plot.fit','site.fit',
+                     'core.preds','plot.preds','site.preds',
+                     'core.sd','plot.sd','site.sd')
+  all.output[[i]] <- output
+  cat(names(all.mod)[i],'forecast complete.',i,'of',length(all.mod),'forecasts completed.\n')
+}
+names(all.output) <- names(all.mod)
 
-#store output as a list and save.----
-output <- list(core.fit,plot.fit,site.fit,core.preds,plot.preds,site.preds,core.sd,plot.sd,site.sd)
-names(output) <- c('core.fit','plot.fit','site.fit',
-                   'core.preds','plot.preds','site.preds',
-                   'core.sd','plot.sd','site.sd')
-saveRDS(output, output.path)
-
-#end script.----
+#Save output.----
+saveRDS(all.output, output.path)

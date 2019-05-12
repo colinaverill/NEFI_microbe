@@ -120,7 +120,8 @@ par(mfrow=(c(1,2)))
 mod1 <- lm(val_rsq ~ cal_rsq, data = d[d$cal_rsq > 0.33,])
 plot(val_rsq ~ cal_rsq, data = d[d$cal_rsq > 0.33,], ylab = 'validation R2', xlab = 'calibration R2')
 abline(mod1, lwd = 2)
-mtext(paste0('R2 = ',round(summary(mod1)$r.squared,2)), side = 3, line = -2, adj = 0.05)
+mtext(paste0('R2 = ',round(summary(mod1)$r.squared,2)), side = 3, line = -2, adj = 0.05, cex = 1.2)
+mtext('a.', side = 1, line = -1.5, adj = 0.95, cex = 1.2)
 
 #You can explain 88% (R2 = 0.88, unadjusted) if you add phylo/functional group to the model.
 mod2 <- lm(val_rsq ~ cal_rsq + phylo_level, data = d[d$cal_rsq > 0.33,])
@@ -128,8 +129,8 @@ y <- d[d$cal_rsq > 0.33,]$val_rsq
 x <- fitted(mod2)
 plot(y ~ x, ylab = 'observed validation R2', xlab = 'predicted validation R2')
 abline(lm(y~x), lwd = 2)
-mtext(paste0('R2 = ',round(summary(mod2)$r.squared,2)), side = 3, line = -2, adj = 0.05)
-
+mtext(paste0('R2 = ',round(summary(mod2)$r.squared,2)), side = 3, line = -2, adj = 0.05, cex = 1.2)
+mtext('b.', side = 1, line = -1.5, adj = 0.95, cex = 1.2)
 
 
 #random forest? Best r2 you gonna get is ~ 16-17%, similar to modeling it as solely a function of 

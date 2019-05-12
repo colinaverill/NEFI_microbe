@@ -4,14 +4,18 @@ library(vegan)
 library(ggbiplot)
 library(RColorBrewer)
 
-#load raw data and predictors.
+#set output path.----
+output.path <- 'parameter_PCA.png'
+
+#load raw data and predictors.----
 pl <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)
 names(pl)[6] <- 'functional'
 
-#colors
+#colors.----
 cols <- brewer.pal(length(pl) - 1,'Spectral')
 cols <- c(cols,'green')
 
+#get together parameters as a matrix and R2 values.----
 d <- list()
 col.plot <- list()
 rsq.out <- list()
@@ -33,7 +37,7 @@ for(i in 1:length(pl)){
   pars <- pars[,!(colnames(pars) == 'other')]
   d[[i]] <- pars
   rsq.out[[i]] <- rsq.lev
-  col.plot[[i]] <- rep(names(pl)[i],ncol(pars) - 1)
+  col.plot[[i]] <- rep(names(pl)[i],ncol(pars))
   pca.sub[[i]] <- prcomp(t(pars), center = T, scale. = T)
 }
 d <- do.call(cbind, d) 
@@ -44,17 +48,22 @@ rsq <- rsq.out[!(names(rsq.out) %in% 'other')]
 rsq <- round(rsq,2)
 names(pca.sub) <- names(pl)
 
-#Do NMDS ordination.
-#par.nmds <- metaMDS(t(d), k=2)
 
-#Do PCA ordination.
+#Do PCA ordination.----
 par.pca <- prcomp(t(d), center = TRUE,scale. = TRUE)
 
-#plot it.
+#setup plor output.----
+png(filename=output.path,width=10,height=10,units='in',res=300)
+
+#plot code.----
 #lab <- paste0(colnames(d), ' ', rsq)
 lab <- colnames(d)
 par(mfrow = c(1,1))
-ggbiplot(par.pca, labels = lab, groups = col.plot)
+ggbiplot(par.pca, labels = lab, groups = col.plot) + 
+  xlim(-2.25, 2.5)
+
+#end plot.----
+dev.off()
 
 #plot them all - the save loop is not working, just went through loop "manually".
 #par(mfrow = c(2,3))
