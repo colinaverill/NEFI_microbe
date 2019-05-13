@@ -136,9 +136,9 @@ names(lev.mu) <- names(pl.cast)
 core.rsq <- unlist(all.core.rsq)
 plot.rsq <- unlist(all.plot.rsq)
 site.rsq <- unlist(all.site.rsq)
-core.rsq <- core.rsq[-grep('other',names(core.rsq))]
-plot.rsq <- plot.rsq[-grep('other',names(plot.rsq))]
-site.rsq <- site.rsq[-grep('other',names(site.rsq))]
+#core.rsq <- core.rsq[-grep('other',names(core.rsq))]
+#plot.rsq <- plot.rsq[-grep('other',names(plot.rsq))]
+#site.rsq <- site.rsq[-grep('other',names(site.rsq))]
 
 
 #Subset to observations that have a minimum calibration R2 value.----
@@ -165,6 +165,8 @@ par(mfrow = c(1,2), mar = c(5,4.2,1.5,1.5))
 #Density plot.----
 plot(site.d,xlim = c(0, 0.89), ylim = limy, bty = 'n', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
 polygon(site.d, col = adjustcolor(cols[1],trans))
+#polygon(plot.d, col = adjustcolor(cols[2],trans))
+#polygon(core.d, col = adjustcolor(cols[3],trans))
 mtext('Density', side = 2, line = 2.2, cex = o.cex)
 mtext(expression(paste("Validation R"^"2")), side = 1, line = 2.5, cex = o.cex)
 
