@@ -3,6 +3,7 @@
 #This is currently soil pH, soil %C and soil C:N.
 #clear environment, source paths.
 rm(list=ls())
+library(dplyr)
 source('paths.r')
 source('NEFI_functions/pC_uncertainty_neon.r')
 source('NEFI_functions/cn_uncertainty_neon.r')
@@ -23,6 +24,9 @@ dp1.10086$geneticSampleID <- as.character(dp1.10086$geneticSampleID)
 #soil C and N data.
 dp1.10078 <- readRDS(dp1.10078.00_output.path)
 dp1.10078$site_date_plot <- paste0(dp1.10078$siteID,'-',dp1.10078$dateID,'-',dp1.10078$plotID)
+#remove analytical replicates
+dp1.10078 <- dp1.10078[-which(dp1.10078$remarks %in% c("Duplicate samples", "Replicate samples", "Replicate samples.")),]
+dp1.10078 <- dp1.10078[-which(dp1.10078$analyticalRepNumber == 2),]
 
 #merge observations together.----
 to_merge <- dp1.10086[,!c(colnames(dp1.10086) %in% colnames(dp1.10801))]
@@ -30,14 +34,38 @@ to_merge$geneticSampleID <- dp1.10086$geneticSampleID
 merged <- merge(dp1.10801,to_merge)
 to_merge <- dp1.10078[,!c(colnames(dp1.10078) %in% colnames(merged))]
 to_merge$sampleID <- dp1.10078$sampleID
-to_merge <- to_merge[!(duplicated(to_merge$sampleID)),] #get rid of analytical replicates.
+
+# fix chem data with N and C split up
+to_merge$CNvals_merged <- FALSE
+dup <- to_merge[duplicated(to_merge$sampleID),]
+dup <- to_merge[to_merge$sampleID %in% dup$sampleID,]
+dup$CNvals_merged <- TRUE
+dup$testMethod <- "008 EA-IRMS organic d13C & C%, 009 EA-IRMS organic d15N & N%"
+dup[,colnames(dup) %in% c("acidTreatment", "percentAccuracyQF", "instrument","analysisDate")]  <- NA # these rows lose their meaning once CN values are merged
+shared_cols <- colnames(dup)[!colnames(dup) %in% c("organicCPercent", "nitrogenPercent", "CNratio")]
+coalesce_by_column <- function(df) { # merge solution from: https://stackoverflow.com/questions/45515218/
+  return(dplyr::coalesce(!!! as.list(df)))
+}
+reduced <- dup %>%
+  group_by_at(vars(one_of(shared_cols))) %>%
+  summarise_all(coalesce_by_column)
+to_merge <- to_merge[!(to_merge$sampleID %in% reduced$sampleID),]
+reduced <- reduced[,colnames(to_merge)] # reoder column names
+reduced$CNratio <- round(reduced$organicCPercent/reduced$nitrogenPercent,1)
+to_merge <- rbind(to_merge, as.data.frame(reduced)) # merge back together
+
+#merge chem data with phys/DNA data
 merged <- merge(merged,to_merge, by = 'sampleID', all.x=T)
 merged$year <- substring(merged$dateID,1,4)
 merged <- merged[!is.na(merged$siteID),]
 
 #Subset to Peak Greenness and first observation. 581 observations. 13 sites.----
+#FALSE - We subset to 2014 now, as Zoey realize this made things better.
+#### THIS PEAK GREENNESS VS. 2014 THING MUST BE RESOLVED SOON.####
+#But, that's not the first observation of everything- We need to choose molecular data separate?
 #Determine which site year to grab. We want the first peak greenness observation for each site.
-merged <- merged[merged$sampleTiming == 'peakGreenness',]
+#merged <- merged[merged$sampleTiming == 'peakGreenness',]
+merged <- merged[merged$year == '2014',]
 merged$siteID <- as.character(merged$siteID)
 sites <- unique(merged$siteID)
 year_grab <- list()
@@ -55,7 +83,9 @@ merged <- do.call(rbind, to_keep)
 merged <- merged[!(duplicated(merged$geneticSampleID)),]
 
 #finalize columns for core.level.----
-core.level <- merged[,c('sampleID','geneticSampleID','dnaSampleID','siteID','plotID','dateID','collectDate','horizon','elevation','soilMoisture','soilInWaterpH','organicCPercent','CNratio')]
+#ATTN: WHY ISN'T ELEVATION IN THE ABOVE DATA PRODUCTS ANY LONGER?
+#core.level <- merged[,c('sampleID','geneticSampleID','dnaSampleID','siteID','plotID','dateID','collectDate','horizon','elevation','soilMoisture','soilInWaterpH','organicCPercent','CNratio')]
+core.level <- merged[,c('sampleID','geneticSampleID','dnaSampleID','siteID','plotID','dateID','collectDate','horizon',            'soilMoisture','soilInWaterpH','organicCPercent','CNratio')]
 colnames(core.level)[(ncol(core.level) - 2) : ncol(core.level)] <- c('pH','pC','cn')
 core.level$pC_sd <- pC_uncertainty_neon(core.level$pC)
 core.level$cn_sd <- cn_uncertainty_neon(core.level$cn)
