@@ -122,6 +122,8 @@ ITS_NEON_observation_uncertainty_plot.effort.path <- paste0(dir,'ITS_NEON_observ
 ted_ITS.prior_dmulti.ddirch_fg_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_fg_JAGSfit.rds')
 ted_ITS.prior_dmulti.ddirch_cosmo_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_cosmo_JAGSfit.rds')
 ted_ITS.prior_dmulti.ddirch_yeast_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_yeast_JAGSfit.rds')
+#dmulti-ddirch cross-validation output, fit with fastq-derived NEON data.
+core.CV_NEON_dmulti.ddirch_all.path <- paste0(dir,'core.CV_NEON_dmulti.ddirch_all.rds')
 
 #Sampling effort bootstrap analyses
 HARV_sampling_effort_analysis.path <- paste0(dir,'HARV_sampling_effort_analysis.rds')
