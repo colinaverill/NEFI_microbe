@@ -36,7 +36,7 @@ module load R/3.4.0
 module load jags
 #
 # in the directory specified above, invoke this function:
-Rscript ITS/analysis/spatial_prior_analysis/dmulti_ddirch_fit/3._priorITS.tedersoo_all.groups_dmulti.ddirch_fit.r
+Rscript ITS/analysis/spatial_prior_analysis/dmulti_ddirch_fit/1._priorITS.tedersoo_all.groups_dmulti.ddirch_fit.r
 #
 #
 #End of commands.
