@@ -110,11 +110,11 @@ output.list<-
     #if(!sum(rownames(y.group) == d$SRR.id) == nrow(y.group)){
     #  cat('Warning. x and y covariates not in the same order!')
     #}
-    fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, seq.depth = rowSums(y.group),
-                                        #adapt = 200, burnin = 16000, sample = 5000, 
-                                        adapt = 200, burnin = 200, sample = 200, 
+    fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal, seq.depth = rowSums(y.group),
+                                        adapt = 200, burnin = 16000, sample = 5000, 
+                                        #adapt = 200, burnin = 200, sample = 200,   #testing
                                         parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
-    return(fit)                                                                  #allows nested loop to work.
+    return(fit)                                                                     #allows nested loop to work.
   }
 cat('Model fitting loop complete! ')
 toc()
@@ -127,7 +127,3 @@ names(output.list) <- names(y.cal)
 cat('Saving fit...\n')
 saveRDS(output.list, output.path)
 cat('Script complete. \n')
-
-#fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x, seq.depth = rowSums(y.group),
-#                                    adapt = 200, burnin = 200, sample = 200, 
-#                                    parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
