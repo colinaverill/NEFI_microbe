@@ -106,10 +106,6 @@ output.list<-
   foreach(i = 1:length(y)) %dopar% {
     y.group <- y.cal[[i]]
     y.group <- y.group$abundances
-    #y.group <- y.group[rownames(y.group) %in% d$SRR.id,]
-    #if(!sum(rownames(y.group) == d$SRR.id) == nrow(y.group)){
-    #  cat('Warning. x and y covariates not in the same order!')
-    #}
     fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal, seq.depth = rowSums(y.group),
                                         adapt = 200, burnin = 16000, sample = 5000, 
                                         #adapt = 200, burnin = 200, sample = 200,   #testing

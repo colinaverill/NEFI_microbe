@@ -1,4 +1,4 @@
-#Plotting ECM, Russula and Ascomycota.
+#Plotting ECM, Russula and Ascomycota - from Multinomial Dirichlet fit.
 #Building so its easy to update which representative groups we use.
 #General method to combine phylo and functional data/casts, and then loop over to plot.
 #Core level plots work. Next is plot-level.
@@ -8,14 +8,14 @@ source('paths.r')
 
 #set output path.----
 output.path <- 'test.png'
-output.path <- NEON_cps_rep.groups_forecast_figure.path
+#output.path <- NEON_cps_rep.groups_forecast_figure.path
 
 #groups of interest----
 namey <- c('Ectomycorrhizal','Russula','Ascomycota')
 level <- c('function_group','genus','phylum')
 
 #grab forecasts and observations of functional and phylogenetic groups.----
-pl.cast <- readRDS(NEON_site_fcast_all_groups_1k_rare.path)
+pl.cast <- readRDS(NEON_dmulti.ddirch_fcast_fg.path)
 pl.truth <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path)
 names(pl.cast )[names(pl.cast ) == 'fg'] <- 'function_group'
 names(pl.truth)[names(pl.truth) == 'fg'] <- 'function_group'
@@ -29,7 +29,6 @@ pl.plot_hi95 <- list()
 pl.site_lo95 <- list()
 pl.site_hi95 <- list()
 for(i in 1:length(pl.truth)){
-  #rel.core <- (pl.core[[i]]$abundances + 1) / pl.core[[i]]$seq_total
   col.namey <- colnames(pl.truth[[i]]$core.fit)[colnames(pl.truth[[i]]$core.fit) %in% namey]
   pl.core_mu  [[i]] <- data.frame(pl.truth[[i]]$core.fit     [,colnames(pl.truth[[i]]$core.fit     ) %in% namey])
   pl.plot_mu  [[i]] <- data.frame(pl.truth[[i]]$plot.fit$mean[,colnames(pl.truth[[i]]$plot.fit$mean) %in% namey])
@@ -165,7 +164,7 @@ for(i in 1:length(names)){
   obs.lo95 <- obs$lo95[,fungi_name]
   obs.hi95 <- obs$hi95[,fungi_name]
   names(obs.mu)   <- names(mu)
-
+  
   #Make out_sites sites gray for out_spp.
   obs.cols <- rep('black',length(obs.mu))
   if(names[i] %in% out_spp){
