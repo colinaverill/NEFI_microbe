@@ -148,7 +148,10 @@ NEON_SV.table.path <- paste0(ITS_scc_gen_dir,'NEON_SV.table.rds')
 #If you generate this on scc, but save on pecan, it will get overwritten by original pecan file.
 NEON_all.phylo.levels_plot.site_obs_fastq.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq.path')
 NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path <- paste0(dir,'NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.rds')
-     
+
+#calibration validation data for NEON cross validation at core and plot scales.
+core.CV_NEON_cal.val_data.path <- paste0(dir,'core.CV_NEON_cal.val_data.rds')
+
           
 #### 16S/pecan_gen: P conversion tables.----
 dir <- pecan_gen_16S_dir
@@ -171,6 +174,7 @@ NEON_ddirch_var.importance_cosmo_figure.path <- paste0(dir,'NEON_ddirch_var.impo
 NEON_cps_rep.groups_forecast_figure.path <- paste0(dir,'NEON_cps_rep.groups_forecast_figure.png')
 NEON_cps_out.of.sample_rsq_density_figure.path <- paste0(dir,'NEON_cps_out.of.sample_rsq_density_figure.png')
 NEON_design_observation_uncertainty.path <- paste0(dir,'NEON_design_observation_uncertainty.png')
+core.CV_NEON_fcast.path <- paste0(dir,'core.CV_NEON_fcast.rds')
 
 #calibration figures.
 ITS_prior_r2_distribution.density_figure.path <- paste0(dir,'ITS_prior_r2_distribution.density_figure.png')

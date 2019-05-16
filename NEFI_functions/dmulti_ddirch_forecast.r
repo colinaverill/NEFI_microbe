@@ -107,6 +107,7 @@ dmulti_ddirch_forecast <- function(mod, seq.depth = 1000, cov_mu, names, cov_sd 
     for(i in 1:nrow(dirichlet_out)){
       multinom_out[[i]] <- t(stats::rmultinom(1,seq.depth,dirichlet_out[i,]))
     }
+    
     multinom_out <- do.call(rbind, multinom_out)
     pred.out[[j]] <- multinom_out/rowSums(multinom_out)
     #Turn off process uncertainty? If so pred.out is just cred.out.

@@ -16,7 +16,8 @@ n.cores <- detectCores()
 registerDoParallel(cores=n.cores)
 
 #set output path.----
-output.path <- core.CV_NEON_dmulti.ddirch_all.path 
+     output.path <- core.CV_NEON_dmulti.ddirch_all.path
+calval_data.path <- core.CV_NEON_cal.val_data.path
 
 #load NEON core-scale data.----
 dat <- readRDS(hierarch_filled.path)
@@ -93,10 +94,21 @@ x_sd.val <- x_sd.val[order(match(x_sd.val$sampleID, gsub('-GEN','',rownames(y.va
 rownames(x_mu.cal) <- rownames(y.cal$phylum$abundances)
 intercept <- rep(1, nrow(x_mu.cal))
 x_mu.cal <- cbind(intercept, x_mu.cal)
-#IMPORTANT: LOG TRANSFORM MAP.
-#log transform map, magnitudes in 100s-1000s break JAGS code.
-x_mu.cal$map <- log(x_mu.cal$map)
+#IMPORTANT: Reduce magnitude of MAP!
+#log transform map means and standard deviations, magnitudes in 100s-1000s break JAGS code.
+x_mu.cal$map <- x_mu.cal$map / 1000
+x_sd.cal$map <- x_sd.cal$map / 1000
 x_mu.cal <- x_mu.cal[,c('intercept','pH','pC','cn','relEM','map','mat','NPP','forest','conifer')]
+
+
+#save calibration/valiation data sets.----
+dat.cal <- list(y.cal, x_mu.cal, x_sd.cal)
+dat.val <- list(y.val, x_mu.val, x_sd.val)
+names(dat.cal) <- c('y.cal','x_mu.cal','x_sd.cal')
+names(dat.val) <- c('y.val','x_mu.val','x_sd.val')
+dat.out <- list(dat.cal, dat.val)
+names(dat.out) <- c('cal','val')
+saveRDS(dat.out, core.CV_NEON_cal.val_data.path)
 
 #fit model using function in parallel loop.-----
 #for running production fit on remote.
