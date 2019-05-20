@@ -124,6 +124,7 @@ ted_ITS.prior_dmulti.ddirch_cosmo_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-dd
 ted_ITS.prior_dmulti.ddirch_yeast_JAGSfit <- paste0(dir,'ted_ITS.prior_dmulti-ddirch_yeast_JAGSfit.rds')
 #dmulti-ddirch cross-validation output, fit with fastq-derived NEON data.
 core.CV_NEON_dmulti.ddirch_all.path <- paste0(dir,'core.CV_NEON_dmulti.ddirch_all.rds')
+plot.CV_NEON_dmulti.ddirch_all.path <- paste0(dir,'plot.CV_NEON_dmulti.ddirch_all.rds')
 
 #Sampling effort bootstrap analyses
 HARV_sampling_effort_analysis.path <- paste0(dir,'HARV_sampling_effort_analysis.rds')
@@ -151,6 +152,7 @@ NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path <- paste0(dir,'NEON_all.p
 
 #calibration validation data for NEON cross validation at core and plot scales.
 core.CV_NEON_cal.val_data.path <- paste0(dir,'core.CV_NEON_cal.val_data.rds')
+plot.CV_NEON_cal.val_data.path <- paste0(dir,'plot.CV_NEON_cal.val_data.rds')
 
           
 #### 16S/pecan_gen: P conversion tables.----
