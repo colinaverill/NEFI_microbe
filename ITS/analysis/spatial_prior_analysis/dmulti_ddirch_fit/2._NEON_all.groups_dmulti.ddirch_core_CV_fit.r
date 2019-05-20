@@ -1,4 +1,5 @@
 #NEON core-scale cross-validation.
+#There was a problem in MAP values in prior that resulted in no convergence and wack values. Need to try again. All paths should work!
 #Fit MULTINOMIAL dirlichet models to all groups of fungi from 50% of NEON core-scale observations.
 #Not going to apply hierarchy, because it would not be a fair comparison to the Tedersoo model.
 #Missing data are allowed.
@@ -20,6 +21,8 @@ registerDoParallel(cores=n.cores)
 calval_data.path <- core.CV_NEON_cal.val_data.path
 
 #load NEON core-scale data.----
+#NOTE: MAP MEANS AND SDS MUST BE DIVIDED BY 1000.
+#WE SHOULD REALLY MOVE THIS TO DATA PRE-PROCESSING.
 dat <- readRDS(hierarch_filled.path)
 #y <- readRDS(tedersoo_ITS_common_phylo_groups_list_1k.rare.path)
 #pl.truth <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path) #this has the plot and site values for NEON.
@@ -48,6 +51,10 @@ core.sd <- merge(core_sd   , plot_sd)
 core.sd <- merge(core.sd, site_sd)
 core.sd$relEM <- NULL
 names(core.sd)[names(core.sd)=="b.relEM"] <- "relEM"
+#IMPORTANT: Reduce magnitude of MAP!
+#log transform map means and standard deviations, magnitudes in 100s-1000s break JAGS code.
+core.preds$map <- core.preds$map / 1000
+core.sd   $map <- core.sd   $map / 1000
 
 #Split into calibration / validation data sets.----
 set.seed(420)
@@ -94,10 +101,6 @@ x_sd.val <- x_sd.val[order(match(x_sd.val$sampleID, gsub('-GEN','',rownames(y.va
 rownames(x_mu.cal) <- rownames(y.cal$phylum$abundances)
 intercept <- rep(1, nrow(x_mu.cal))
 x_mu.cal <- cbind(intercept, x_mu.cal)
-#IMPORTANT: Reduce magnitude of MAP!
-#log transform map means and standard deviations, magnitudes in 100s-1000s break JAGS code.
-x_mu.cal$map <- x_mu.cal$map / 1000
-x_sd.cal$map <- x_sd.cal$map / 1000
 x_mu.cal <- x_mu.cal[,c('intercept','pH','pC','cn','relEM','map','mat','NPP','forest','conifer')]
 
 

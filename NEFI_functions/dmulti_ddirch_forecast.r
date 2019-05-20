@@ -18,7 +18,8 @@ source('NEFI_functions/precision_matrix_match.r')
 dmulti_ddirch_forecast <- function(mod, seq.depth = 1000, cov_mu, names, cov_sd = NA, n.samp = 1000,
                                    zero_parameter_uncertainty = F,
                                    zero_covariate_uncertainty = F,
-                                     zero_process_uncertainty = F){
+                                     zero_process_uncertainty = F,
+                                                 make_it_work = F){
   #run some tests.----
   if(is.list(mod) == F){
     stop("Your model object isn't a list. It really needs to be.")
@@ -54,16 +55,13 @@ dmulti_ddirch_forecast <- function(mod, seq.depth = 1000, cov_mu, names, cov_sd 
     #Sample parameters from mcmc output.----
     mcmc <- do.call(rbind,j.mod$mcmc)
     mcmc.sample <- mcmc[sample(nrow(mcmc),1),]
-    #grab x.m values, convert to matrix.
-    x.m <- mcmc.sample[grep("^x\\.m\\[", names(mcmc.sample))]
-    x.m <- matrix(x.m, nrow = ncol(covs), ncol = length(x.m)/ncol(covs))
-    
     #if we are fixing parameter uncertainty to zero, do something different.----
     if(zero_parameter_uncertainty == T){
       mcmc.sample <- colMeans(mcmc)
-      x.m <- mcmc.sample[grep("^x\\.m\\[", names(mcmc.sample))]
-      x.m <- matrix(x.m, nrow = ncol(covs), ncol = length(x.m)/ncol(covs))
     }
+    #grab x.m values, convert to matrix.
+    x.m <- mcmc.sample[grep("^x\\.m\\[", names(mcmc.sample))]
+    x.m <- matrix(x.m, nrow = ncol(covs), ncol = length(x.m)/ncol(covs))
     
     #Sample from covariate distributions.----
     #fix covariate uncertainty? Do this by making sd zero.
@@ -99,6 +97,10 @@ dmulti_ddirch_forecast <- function(mod, seq.depth = 1000, cov_mu, names, cov_sd 
     #Combine covariates and parameters to make a prediction.----
     pred.x.m <- matrix(NA, ncol=ncol(x.m), nrow = nrow(covs))
     for(k in 1:ncol(x.m)){pred.x.m[,k] <- exp(now.cov %*% x.m[,k])}
+    #Sometimes parameter draws generate infinities for groups that didnt fit well. Force it?
+    if(make_it_work == T){
+      pred.x.m[pred.x.m == Inf] <- max(pred.x.m < Inf)
+    }
     #get mean prediction and then draw from multinomial-dirichlet distribution.
     cred.out[[j]] <- pred.x.m / rowSums(pred.x.m)
     #prediction interval passes through Dirichlet and multinomial processes.
@@ -107,7 +109,6 @@ dmulti_ddirch_forecast <- function(mod, seq.depth = 1000, cov_mu, names, cov_sd 
     for(i in 1:nrow(dirichlet_out)){
       multinom_out[[i]] <- t(stats::rmultinom(1,seq.depth,dirichlet_out[i,]))
     }
-    
     multinom_out <- do.call(rbind, multinom_out)
     pred.out[[j]] <- multinom_out/rowSums(multinom_out)
     #Turn off process uncertainty? If so pred.out is just cred.out.

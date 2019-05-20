@@ -19,7 +19,7 @@ core.sd    <- dat$val$x_sd.val
 all.output <- list()
 for(i in 1:length(all.mod)){
   mod <- all.mod[[i]]
-  core.fit <- dmulti_ddirch_forecast(mod, cov_mu = core.preds, cov_sd = core.sd, names = core.preds$sampleID)
+  core.fit <- dmulti_ddirch_forecast(mod, cov_mu = core.preds, cov_sd = core.sd, names = core.preds$sampleID, make_it_work = T)
   #store output as a list and save.----
   output <- list(core.fit,core.preds,core.sd)
   names(output) <- c('core.fit','core.preds','core.sd')
