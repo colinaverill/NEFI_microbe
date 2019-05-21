@@ -20,12 +20,10 @@ registerDoParallel(cores=n.cores)
      output.path <- plot.CV_NEON_dmulti.ddirch_all.path
 calval_data.path <- plot.CV_NEON_cal.val_data.path
 
-#load NEON core-scale data.----
+#load NEON plot-scale data.----
 #NOTE: MAP MEANS AND SDS MUST BE DIVIDED BY 1000.
 #WE SHOULD REALLY MOVE THIS TO DATA PRE-PROCESSING.
 dat <- readRDS(hierarch_filled.path)
-#y <- readRDS(tedersoo_ITS_common_phylo_groups_list_1k.rare.path)
-#pl.truth <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path) #this has the plot and site values for NEON.
 y <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path)
 
 
@@ -58,9 +56,27 @@ core.sd   $map <- core.sd   $map / 1000
 
 #Split into calibration / validation data sets.----
 set.seed(420)
-ID <- rownames(y$phylum$plot.fit$mean)
-cal.ID <- sample(ID, round(length(ID)/ 2))
-val.ID <- ID[!(ID %in% cal.ID)]
+#ID <- rownames(y$phylum$plot.fit$mean)
+#cal.ID <- sample(ID, round(length(ID)/ 2))
+#val.ID <- ID[!(ID %in% cal.ID)]
+#Subset by plot and site.
+plotID <- rownames(y$phylum$plot.fit$mean)
+siteID <- substr(plotID,1, 4)
+plots <- data.frame(plotID, siteID)
+sites <- unique(plots$siteID)
+cal <- list()
+val <- list()
+for(i in 1:length(sites)){
+  sub <- plots[plots$siteID == sites[i],]
+  cal_sub <- sub[sub$plotID %in% sample(sub$plotID, round(nrow(sub) / 2)),]
+  val_sub <- sub[!(sub$plotID %in% cal_sub$plotID),]
+  cal[[i]] <- cal_sub
+  val[[i]] <- val_sub
+}
+cal <- do.call(rbind, cal)
+val <- do.call(rbind, val)
+cal.ID <- as.character(cal$plotID)
+val.ID <- as.character(val$plotID)
 
 #loop through y values. Wasn't an easy way to loop through levels of list.
 y.cal <- list()

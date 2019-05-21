@@ -177,6 +177,7 @@ NEON_cps_rep.groups_forecast_figure.path <- paste0(dir,'NEON_cps_rep.groups_fore
 NEON_cps_out.of.sample_rsq_density_figure.path <- paste0(dir,'NEON_cps_out.of.sample_rsq_density_figure.png')
 NEON_design_observation_uncertainty.path <- paste0(dir,'NEON_design_observation_uncertainty.png')
 core.CV_NEON_fcast.path <- paste0(dir,'core.CV_NEON_fcast.rds')
+plot.CV_NEON_fcast.path <- paste0(dir,'plot.CV_NEON_fcast.rds')
 
 #calibration figures.
 ITS_prior_r2_distribution.density_figure.path <- paste0(dir,'ITS_prior_r2_distribution.density_figure.png')
