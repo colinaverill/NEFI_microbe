@@ -1,4 +1,5 @@
 #NEON core-scale cross-validation.
+#This has a massive amount of burnin, so takes a while to run.
 #There was a problem in MAP values in prior that resulted in no convergence and wack values. Need to try again. All paths should work!
 #Fit MULTINOMIAL dirlichet models to all groups of fungi from 50% of NEON core-scale observations.
 #Not going to apply hierarchy, because it would not be a fair comparison to the Tedersoo model.
@@ -134,7 +135,7 @@ output.list<-
   foreach(i = 1:length(y)) %dopar% {
     y.group <- round(y.cal[[i]]$mean * 1000) #Should perhaps draw from uncertainties, but these supplied hi/lo95 values dont account for covariance among taxa.
     fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal, seq.depth = rowSums(y.group),
-                                        adapt = 200, burnin = 16000, sample = 5000, 
+                                        adapt = 200, burnin = 25000, sample = 4000, 
                                         #adapt = 200, burnin = 200, sample = 200,   #testing
                                         parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
     return(fit)                                                                     #allows nested loop to work.
