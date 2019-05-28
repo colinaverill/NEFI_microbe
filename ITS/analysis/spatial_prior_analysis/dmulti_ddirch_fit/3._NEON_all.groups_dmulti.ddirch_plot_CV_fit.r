@@ -61,6 +61,7 @@ set.seed(420)
 #cal.ID <- sample(ID, round(length(ID)/ 2))
 #val.ID <- ID[!(ID %in% cal.ID)]
 #Subset by plot and site.
+cal.p <- 0.7 #how much data in calibration vs. validation.
 plotID <- rownames(y$phylum$plot.fit$mean)
 siteID <- substr(plotID,1, 4)
 plots <- data.frame(plotID, siteID)
@@ -69,7 +70,7 @@ cal <- list()
 val <- list()
 for(i in 1:length(sites)){
   sub <- plots[plots$siteID == sites[i],]
-  cal_sub <- sub[sub$plotID %in% sample(sub$plotID, round(nrow(sub) / 2)),]
+  cal_sub <- sub[sub$plotID %in% sample(sub$plotID, round(nrow(sub) * cal.p)),]
   val_sub <- sub[!(sub$plotID %in% cal_sub$plotID),]
   cal[[i]] <- cal_sub
   val[[i]] <- val_sub
