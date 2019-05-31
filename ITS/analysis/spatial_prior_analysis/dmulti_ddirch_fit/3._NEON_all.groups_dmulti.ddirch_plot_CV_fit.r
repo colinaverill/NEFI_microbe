@@ -134,9 +134,9 @@ cat('Begin model fitting loop...\n')
 tic()
 output.list<-
   foreach(i = 1:length(y)) %dopar% {
-    y.group <- round(y.cal[[i]]$mean * 1000) #Should perhaps draw from uncertainties, but these supplied hi/lo95 values dont account for covariance among taxa.
+    y.group <- round(y.cal[[i]]$mean * 3000) #Should perhaps draw from uncertainties, but these supplied hi/lo95 values dont account for covariance among taxa.
     fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal, seq.depth = rowSums(y.group),
-                                        adapt = 200, burnin = 50000, sample = 8000, 
+                                        adapt = 200, burnin = 30000, sample = 6000, 
                                         #adapt = 200, burnin = 200, sample = 200,   #testing
                                         parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
     return(fit)                                                                     #allows nested loop to work.
