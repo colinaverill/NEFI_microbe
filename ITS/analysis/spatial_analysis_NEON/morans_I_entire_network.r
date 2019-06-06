@@ -115,22 +115,22 @@ for(i in 1:length(a_out)){
 }
 a_avg <- data.frame(do.call(rbind, a_avg))
 b_avg <- data.frame(do.call(rbind, b_avg))
-rownames(a_avg) <- names(a_out)
-rownames(b_avg) <- names(b_out)
+rownames(a_avg) <- names(fcast)
+rownames(b_avg) <- names(fcast)
 
 #assign x positions, functional groups first.
 a_avg$x <- c(2:(nrow(a_avg)), 1)
 b_avg$x <- c(2:(nrow(b_avg)), 1)
 
 #setup figure output.----
-png(filename=output.path,width=7,height=7,units='in',res=300)
+png(filename=output.path,width=7,height=5,units='in',res=300)
 
 #plot.-----
-par(mfrow=c(1,1))
-#Raw spatial signal.
+par(mfrow=c(1,2), mar = c(5,3,.5,1), oma = c(1,1.5,1,1))
+#Raw spatial signal FUNGI.
 limy <- c(0, max(a_avg$mu + a_avg$se))
 plot(mu ~ x, data = a_avg, cex = 2, pch = 16, ylim = limy,
-     ylab = "Moran's I", xlab = NA, xaxt = 'n')
+     ylab = NA, xlab = NA, xaxt = 'n', bty = 'l')
 #error bars.
 mu <- a_avg$mu
 x <- a_avg$x
@@ -139,25 +139,28 @@ lwr <- mu - a_avg$se
 arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
 #x-axis.
 x.lab <- rownames(a_avg)
-x.lab[x.lab == 'fg'] <- 'function_group'
-axis(1, at=a_avg$x, labels=x.lab, cex = 0.8)
-mtext('Spatial Signal',side = 3, line = 0.5, cex = 1.4)
+x.lab[x.lab == 'fg'] <- 'functional'
+axis(1, at=a_avg$x, labels= NA, cex = 1, srt = 45)
+text(x= a_avg$x + .12, y = -0.06, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = 1)
+mtext("Moran's I", side = 2, line = 2.5, cex = 1.2)
+mtext('Fungi',side = 3, line = -2, cex = 1.7, adj  = 0.95)
+
+#FUTURE BACTERIA PLOT. TURN CEX BACK ON WHEN READY FOR POINTS.
+plot(mu ~ x, data = a_avg, cex = 0, pch = 16, ylim = limy,
+     ylab = NA, xlab = NA, xaxt = 'n', bty = 'l')
+#error bars.
+#mu <- a_avg$mu
+#x <- a_avg$x
+#upr <- mu + a_avg$se
+#lwr <- mu - a_avg$se
+#arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
+#x-axis.
+x.lab <- rownames(a_avg)
+x.lab[x.lab == 'fg'] <- 'functional'
+axis(1, at=a_avg$x, labels= NA, cex = 1, srt = 45)
+text(x= a_avg$x + .12, y = -0.06, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = 1)
+mtext('Bacteria',side = 3, line = -2, cex = 1.7, adj  = 0.95)
+
 
 #end plot.----
 dev.off()
-
-#Post model spatial signal.----
-#plot(mu ~ x, data = b_avg, cex = 2, pch = 16, ylim = limy,
-#     ylab = "Moran's I", xlab = NA, xaxt = 'n')
-#error bars.
-#mu <- b_avg$mu
-#x <- b_avg$x
-#upr <- mu + b_avg$se
-#lwr <- mu - b_avg$se
-#arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
-#x-axis.
-#x.lab <- rownames(b_avg)
-#x.lab[x.lab == 'fg'] <- 'function_group'
-#axis(1, at=b_avg$x, labels=x.lab, cex = 0.8)
-#mtext('Spatial Signal Model Residuals',side = 3, line = 0.5, cex = 1.4)
-

@@ -3,6 +3,9 @@ rm(list=ls())
 source('paths.r')
 library(data.table)
 
+#set figure output path.----
+output.path <- 'test.png'
+
 #load data.----
 #load in-/out-of-sample diversity stats.
 cal.div <- readRDS(tedersoo_ITS_common_phylo_groups_list_1k.rare.path)
@@ -114,11 +117,21 @@ plot(val_rsq ~ log10(val_N.SV), data = d[d$cal_rsq > 0.1,])
 plot(val_rsq ~ val_diversity  ,data = d[d$cal_rsq > 0.1,])
 plot(val_rsq ~ val_variance   , data = d[d$cal_rsq > 0.1,])
 
+
+#png save line.----
+png(filename=output.path,width=8,height=5,units='in',res=300)
+    
 #THIS IS THE ANSWER.
 #When you subset to calibration R2 > 0.33, calibration does predict validation, R2 = 0.49, unadjusted.
-par(mfrow=(c(1,2)))
+par(mfrow=c(1,2),
+    mar = c(4,4,1,1))
+o.cex = 1.3
+
+#plot 1.----
 mod1 <- lm(val_rsq ~ cal_rsq, data = d[d$cal_rsq > 0.33,])
-plot(val_rsq ~ cal_rsq, data = d[d$cal_rsq > 0.33,], ylab = 'validation R2', xlab = 'calibration R2')
+plot(val_rsq ~ cal_rsq, data = d[d$cal_rsq > 0.33,], ylab = NA, xlab = NA, bty = 'l', pch = 16, cex = 1.5)
+mtext(mtext(expression(paste("Validation R"^"2")) , side = 2, line = 2.5, cex = o.cex))
+mtext(mtext(expression(paste("Calibration R"^"2")), side = 1, line = 3, cex = o.cex))
 abline(mod1, lwd = 2)
 mtext(paste0('R2 = ',round(summary(mod1)$r.squared,2)), side = 3, line = -2, adj = 0.05, cex = 1.2)
 mtext('a.', side = 1, line = -1.5, adj = 0.95, cex = 1.2)
@@ -127,13 +140,17 @@ mtext('a.', side = 1, line = -1.5, adj = 0.95, cex = 1.2)
 mod2 <- lm(val_rsq ~ cal_rsq + phylo_level, data = d[d$cal_rsq > 0.33,])
 y <- d[d$cal_rsq > 0.33,]$val_rsq
 x <- fitted(mod2)
-plot(y ~ x, ylab = 'observed validation R2', xlab = 'predicted validation R2')
+plot(y ~ x, ylab = NA, xlab = NA, bty =  'l', pch = 16, cex = 1.5)
+mtext(mtext(expression(paste("Observed Validation R"^"2")) , side = 2, line = 2.5, cex = o.cex))
+mtext(mtext(expression(paste("Predicted R"^"2")), side = 1, line = 3, cex = o.cex))
 abline(lm(y~x), lwd = 2)
 mtext(paste0('R2 = ',round(summary(mod2)$r.squared,2)), side = 3, line = -2, adj = 0.05, cex = 1.2)
 mtext('b.', side = 1, line = -1.5, adj = 0.95, cex = 1.2)
 
+#end plot.----
+dev.off()
 
-#random forest? Best r2 you gonna get is ~ 16-17%, similar to modeling it as solely a function of 
+#random forest? Best r2 you gonna get is ~ 22-23%.
 #library(randomForest)
 #library(rfUtilities)
 #rf.d <- d[complete.cases(d),]
@@ -141,5 +158,7 @@ mtext('b.', side = 1, line = -1.5, adj = 0.95, cex = 1.2)
 #rf.d$phylo_level <- as.factor(rf.d$phylo_level)
 #rf.mod <- randomForest(val_rsq ~ ., data = rf.d)
 #varImpPlot(rf.mod, type = 2)
+#plot(rf.d$val_rsq ~ rf.mod$predicted)
+#summary(lm(rf.d$val_rsq ~ rf.mod$predicted))
 #rf.cv <- rf.crossValidation(rf.mod, xdata=rf.d[,!(colnames(rf.d) %in% 'val_rsq')]) #not working.
 

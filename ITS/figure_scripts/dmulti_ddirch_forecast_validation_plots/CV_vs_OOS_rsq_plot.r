@@ -214,7 +214,7 @@ trans <- 0.2 #shading transparency.
 o.cex <- 1.3 #outer label size.
 cols <- c('purple','cyan','yellow')
 labs <- c('Global Forecast','NEON Cross-Validation')
-
+labs <- c('Global Forecast (a)','NEON Cross-Validation (b)','Global Forecast (c)','NEON Cross-Validation (d)')
 
 #Forecast OOS R2----
 a <- oos.core.r2[!is.na(oos.core.r2)]
@@ -251,7 +251,7 @@ a <- oos.core.rmse
 b <- oos.plot.rmse
 limx <- c(0,max(c(a,b))*1.1)
 limy <- c(0, max(c(zero_truncated_density(a)$y,zero_truncated_density(b)$y))*1.02)
-main.lab <- labs[1]
+main.lab <- labs[3]
 plot(cv.core.rmse,xlim = limx, ylim = limy, bty = 'l', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
 polygon(zero_truncated_density(a), col = adjustcolor(cols[1],trans))
 polygon(zero_truncated_density(b), col = adjustcolor(cols[2],trans))
@@ -265,7 +265,7 @@ a <- cv.core.rmse
 b <- cv.plot.rmse
 limx <- c(0,max(c(a,b))*1.1)
 limy <- c(0, max(c(zero_truncated_density(a)$y,zero_truncated_density(b)$y))*1.02)
-main.lab <- labs[2]
+main.lab <- labs[4]
 plot(cv.core.rmse,xlim = limx, ylim = limy, bty = 'l', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
 polygon(zero_truncated_density(a), col = adjustcolor(cols[1],trans))
 polygon(zero_truncated_density(b), col = adjustcolor(cols[2],trans))
