@@ -65,13 +65,3 @@ ggbiplot(par.pca, labels = lab, groups = col.plot) +
 #end plot.----
 dev.off()
 
-#plot them all - the save loop is not working, just went through loop "manually".
-#par(mfrow = c(2,3))
-#for(i in 1:length(pca.sub)){
-#  lab <- names(pl[[i]]$species_parameter_output)
-#  lab <- lab[-1]
-#  output.path <- paste0(names(pca.sub)[i], '_parameter_PCA.png')
-#  png(filename=output.path,width=4,height=4,units='in',res=300)
-#  ggbiplot(pca.sub[[i]], labels = lab)
-#  dev.off()
-#}

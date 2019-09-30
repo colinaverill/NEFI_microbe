@@ -193,9 +193,9 @@ site.rmse <- site.rmse[names(site.rmse) %in% names(pass)]
 core.d <- zero_truncated_density(core.rsq)
 plot.d <- zero_truncated_density(plot.rsq)
 site.d <- zero_truncated_density(site.rsq)
-core.rmse.d <- density(core.rmse)
-plot.rmse.d <- density(plot.rmse)
-site.rmse.d <- density(site.rmse)
+core.rmse.d <- zero_truncated_density(core.rmse)
+plot.rmse.d <- zero_truncated_density(plot.rmse)
+site.rmse.d <- zero_truncated_density(site.rmse)
 
 #png save line.----
 png(filename=output.path,width=8,height=6,units='in',res=300)
@@ -208,7 +208,7 @@ trans <- 0.2 #shading transparency.
 o.cex <- 1.0 #outer label size.
 cols <- c('purple','cyan','yellow')
 
-#Calibration R2 denisty plot.-----
+#Calibration R2 denisty plot (retired).-----
 #dat <- unlist(cal.r2)
 #dat <- zero_truncated_density(dat)
 #limy <- c(0, max(dat$y)*1.05)
@@ -242,7 +242,7 @@ dat.a <- core.rmse.d
 dat.b <- plot.rmse.d
 dat.c <- site.rmse.d
 limy <- c(0, max(c(dat.a$y, dat.b$y, dat.c$y))*1.05)
-limx <- c(min(c(dat.a$x, dat.b$x, dat.c$x)), max(c(dat.a$x, dat.b$x, dat.c$x)))
+limx <- c(0, max(c(dat.a$x, dat.b$x, dat.c$x)))
 #Density plot.
 plot(dat.a,xlim = limx, ylim = limy, bty = 'l', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
 polygon(dat.a, col = adjustcolor(cols[1],trans))

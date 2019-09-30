@@ -80,8 +80,10 @@ for(i in 1:length(namey)){
 names(prior.plot) <- namey
 names(fcast.plot) <- namey
 
-#Plot fits.----
+#save line.----
 png('test.png', height = 8, width = 6, units = 'in', res = 300)
+
+#Plot fits.----
 par(mfrow = c(3,2),
     mar = c(1,1,1,1),
     oma = c(4,4,3,1))
@@ -119,5 +121,5 @@ mtext('observed' , side = 2, cex = 1.5, outer = T, line = 2.0)
 mtext('in-sample'    , side = 3, cex = 1.5, outer = T, line = -0.5, adj = 0.20)
 mtext('out-of-sample', side = 3, cex = 1.5, outer = T, line = -0.5, adj = 0.875)
 
-#end plot.
+#end plot.----
 dev.off()
