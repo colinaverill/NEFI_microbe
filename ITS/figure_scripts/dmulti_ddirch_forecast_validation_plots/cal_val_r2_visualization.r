@@ -2,6 +2,7 @@
 rm(list=ls())
 source('paths.r')
 source('NEFI_functions/zero_truncated_density.r')
+library(Metrics)
 
 #set output path.----
 output.path <- 'test.png'
@@ -46,25 +47,29 @@ lev.cal.r2 <- unlist(lev.cal.r2)
 #val.cast <- readRDS(NEON_dmulti.ddirch_fcast_fg.path) 
 val.truth <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path)
 val.cast <- readRDS(NEON_site_fcast_all_groups_1k_rare.path)
-#pl.core <- readRDS(NEON_ITS_fastq_all_cosmo_phylo_groups_1k_rare.path)
 
 #Re-order.
 val.cast  <- val.cast [c('fg','phylum','class','order','family','genus')]
 val.truth <- val.truth[c('fg','phylum','class','order','family','genus')]
-#pl.core <- pl.core[c('fg','phylum','class','order','family','genus')]
 
 #names.
 names(val.cast)[1] <- 'functional'
 
-#get core, plot site R2 values out of sample.----
-all.core.rsq <- list()
-all.plot.rsq <- list()
-all.site.rsq <- list()
+#get core, plot site R2 and RMSE values out of sample.----
+all.core.rsq  <- list()
+all.plot.rsq  <- list()
+all.site.rsq  <- list()
+all.core.rmse <- list()
+all.plot.rmse <- list()
+all.site.rmse <- list()
 for(i in 1:length(val.cast)){
   fcast <- val.cast[[i]]
   core.rsq <- list()
   plot.rsq <- list()
   site.rsq <- list()
+  core.rmse <- list()
+  plot.rmse <- list()
+  site.rmse <- list()
   #core.level----
   #y <- (pl.core[[i]]$abundances + 1)/pl.core[[i]]$seq_total
   y <- val.truth[[i]]$core.fit
@@ -81,14 +86,19 @@ for(i in 1:length(val.cast)){
   for(k in 1:ncol(fcast$core.fit$mean)){
     fungi_name <- colnames(x)[k]
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
+    obs.rmse <- rmse(y[,k], x[,k])
+    names(obs.rmse) <- names(rsq)
     if(fungi_name == 'Ectomycorrhizal'){
       sub.y <- y[-grep('DSNY',rownames(y)),]
       sub.x <- x[-grep('DSNY',rownames(x)),]
       rsq <- summary(lm(sub.y[,k] ~ sub.x[,k]))$r.squared
+      obs.rmse <- rmse(sub.y[,k], sub.x[,k])
+      names(obs.rmse) <- names(rsq)
     }
     names(rsq) <- fungi_name
     if(fungi_name == 'other'){next}
-    core.rsq[[k]] <- rsq
+    core.rsq [[k]] <- rsq
+    core.rmse[[k]] <- obs.rmse
   }
   #plot.level----
   x <- fcast$plot.fit$mean
@@ -105,14 +115,19 @@ for(i in 1:length(val.cast)){
   for(k in 1:ncol(y)){
     fungi_name <- colnames(x)[k]
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
+    obs.rmse <- rmse(y[,k], x[,k])
+    names(obs.rmse) <- names(rsq)
     if(fungi_name == 'Ectomycorrhizal'){
       sub.y <- y[-grep('DSNY',rownames(y)),]
       sub.x <- x[-grep('DSNY',rownames(x)),]
       rsq <- summary(lm(sub.y[,k] ~ sub.x[,k]))$r.squared
+      obs.rmse <- rmse(sub.y[,k], sub.x[,k])
+      names(obs.rmse) <- names(rsq)
     }
     names(rsq) <- fungi_name
     if(fungi_name == 'other'){next}
-    plot.rsq[[k]] <- rsq
+    plot.rsq [[k]] <- rsq
+    plot.rmse[[k]] <- obs.rmse
   }
   #site.level----
   x <- fcast$site.fit$mean
@@ -129,19 +144,27 @@ for(i in 1:length(val.cast)){
   for(k in 1:ncol(y)){
     fungi_name <- colnames(x)[k]
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
+    obs.rmse <- rmse(y[,k],x[,k])
+    names(obs.rmse) <- names(rsq)
     if(fungi_name == 'Ectomycorrhizal'){
       sub.y <- y[-grep('DSNY',rownames(y)),]
       sub.x <- x[-grep('DSNY',rownames(x)),]
       rsq <- summary(lm(sub.y[,k] ~ sub.x[,k]))$r.squared
+      obs.rmse <- rmse(sub.y[,k], sub.x[,k])
+      names(obs.rmse) <- names(rsq)
     }
     names(rsq) <- fungi_name
     if(fungi_name == 'other'){next}
-    site.rsq[[k]] <- rsq
+    site.rsq [[k]] <- rsq
+    site.rmse[[k]] <- obs.rmse
   }
   #wrap up for return.----
-  all.core.rsq[[i]] <- unlist(core.rsq)
-  all.plot.rsq[[i]] <- unlist(plot.rsq)
-  all.site.rsq[[i]] <- unlist(site.rsq)
+  all.core.rsq [[i]] <- unlist(core.rsq)
+  all.plot.rsq [[i]] <- unlist(plot.rsq)
+  all.site.rsq [[i]] <- unlist(site.rsq)
+  all.core.rmse[[i]] <- unlist(core.rmse)
+  all.plot.rmse[[i]] <- unlist(plot.rmse)
+  all.site.rmse[[i]] <- unlist(site.rmse)
 }
 
 val.mu <- unlist(lapply(all.site.rsq, mean  ))
@@ -152,19 +175,27 @@ names(val.mu) <- names(val.cast)
 core.rsq <- unlist(all.core.rsq)
 plot.rsq <- unlist(all.plot.rsq)
 site.rsq <- unlist(all.site.rsq)
-#core.rsq <- core.rsq[-grep('other',names(core.rsq))]
-#plot.rsq <- plot.rsq[-grep('other',names(plot.rsq))]
-#site.rsq <- site.rsq[-grep('other',names(site.rsq))]
-
+core.rmse <- unlist(all.core.rmse)
+plot.rmse <- unlist(all.plot.rmse)
+site.rmse <- unlist(all.site.rmse)
+names(core.rmse) <- names(core.rsq)
+names(plot.rmse) <- names(plot.rsq)
+names(site.rmse) <- names(site.rsq)
 
 #Subset to observations that have a minimum calibration R2 value.----
 pass <- lev.cal.r2
 core.rsq <- core.rsq[names(core.rsq) %in% names(pass)]
 plot.rsq <- plot.rsq[names(plot.rsq) %in% names(pass)]
 site.rsq <- site.rsq[names(site.rsq) %in% names(pass)]
+core.rmse <- core.rmse[names(core.rmse) %in% names(pass)]
+plot.rmse <- plot.rmse[names(plot.rmse) %in% names(pass)]
+site.rmse <- site.rmse[names(site.rmse) %in% names(pass)]
 core.d <- zero_truncated_density(core.rsq)
 plot.d <- zero_truncated_density(plot.rsq)
 site.d <- zero_truncated_density(site.rsq)
+core.rmse.d <- density(core.rmse)
+plot.rmse.d <- density(plot.rmse)
+site.rmse.d <- density(site.rmse)
 
 #png save line.----
 png(filename=output.path,width=8,height=6,units='in',res=300)
@@ -178,16 +209,16 @@ o.cex <- 1.0 #outer label size.
 cols <- c('purple','cyan','yellow')
 
 #Calibration R2 denisty plot.-----
-dat <- unlist(cal.r2)
-dat <- zero_truncated_density(dat)
-limy <- c(0, max(dat$y)*1.05)
-limx <- c(0, max(dat$x))
-#Density plot.
-plot(dat,xlim = limx, ylim = limy, bty = 'l', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
-polygon(dat, col = adjustcolor(cols[3],trans))
-mtext('Density', side = 2, line = 2.5, cex = o.cex)
-mtext(expression(paste("Calibration R"^"2")), side = 1, line = 3, cex = o.cex)
-mtext('(a)', side = 3, adj = 0.95, line = -2)
+#dat <- unlist(cal.r2)
+#dat <- zero_truncated_density(dat)
+#limy <- c(0, max(dat$y)*1.05)
+#limx <- c(0, max(dat$x))
+##Density plot.
+#plot(dat,xlim = limx, ylim = limy, bty = 'l', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
+#polygon(dat, col = adjustcolor(cols[3],trans))
+#mtext('Density', side = 2, line = 2.5, cex = o.cex)
+#mtext(expression(paste("Calibration R"^"2")), side = 1, line = 3, cex = o.cex)
+#mtext('(a)', side = 3, adj = 0.95, line = -2)
 
 #Validation R2 denisty plot.-----
 dat.a <- core.d
@@ -202,6 +233,23 @@ polygon(dat.b, col = adjustcolor(cols[2],trans))
 polygon(dat.c, col = adjustcolor(cols[3],trans))
 mtext('Density', side = 2, line = 2.5, cex = o.cex)
 mtext(expression(paste("Validation R"^"2")), side = 1, line = 3, cex = o.cex)
+#legend
+legend(x = 0.5, y = 12.5, legend = c('core','plot','site'), col ='black', pt.bg=adjustcolor(cols,trans), bty = 'n', pch = 22, pt.cex = 1.5, cex = 1.2)
+mtext('(a)', side = 3, adj = 0.95, line = -2)
+
+#Validation RMSE denisty plot.-----
+dat.a <- core.rmse.d
+dat.b <- plot.rmse.d
+dat.c <- site.rmse.d
+limy <- c(0, max(c(dat.a$y, dat.b$y, dat.c$y))*1.05)
+limx <- c(min(c(dat.a$x, dat.b$x, dat.c$x)), max(c(dat.a$x, dat.b$x, dat.c$x)))
+#Density plot.
+plot(dat.a,xlim = limx, ylim = limy, bty = 'l', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 0)
+polygon(dat.a, col = adjustcolor(cols[1],trans))
+polygon(dat.b, col = adjustcolor(cols[2],trans))
+polygon(dat.c, col = adjustcolor(cols[3],trans))
+mtext('Density', side = 2, line = 2.5, cex = o.cex)
+mtext(expression(paste("Validation RMSE")), side = 1, line = 3, cex = o.cex)
 #legend
 legend(x = 0.5, y = 12.5, legend = c('core','plot','site'), col ='black', pt.bg=adjustcolor(cols,trans), bty = 'n', pch = 22, pt.cex = 1.5, cex = 1.2)
 mtext('(b)', side = 3, adj = 0.95, line = -2)
