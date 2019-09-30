@@ -74,7 +74,9 @@ for(i in 1:length(namey)){
    prior.plot[[i]] <- data.frame(obs, pred)
   #fcst pred vs. obs.
   pred <- fcast[[which(names(fcast) == level[i])]]$site.fit$mean
+  pred <- pred[,colnames(pred) == namey[i]]
    obs <- neon.truth[[which(names(fcast) == level[i])]]$site.fit$mean
+   obs <-  obs[,colnames(obs) == namey[i]]
    fcast.plot[[i]] <- data.frame(obs, pred)
 }
 names(prior.plot) <- namey
