@@ -2,6 +2,9 @@
 rm(list=ls())
 source('paths.r')
 
+#set output path.----
+output.path <- 'Supp._Fig._3._bad_out.of.sample_fits.png'
+
 #load data.----
 #grab prior fits.
 prior <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path) #all phylo and functional groups.
@@ -83,7 +86,7 @@ names(prior.plot) <- namey
 names(fcast.plot) <- namey
 
 #save line.----
-png('test.png', height = 8, width = 6, units = 'in', res = 300)
+png(output.path, height = 8, width = 6, units = 'in', res = 300)
 
 #Plot fits.----
 par(mfrow = c(3,2),

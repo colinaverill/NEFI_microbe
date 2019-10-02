@@ -5,7 +5,7 @@ library(ggbiplot)
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'parameter_PCA.png'
+output.path <- 'Fig._3._parameter_PCA.png'
 
 #load raw data and predictors.----
 pl <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)

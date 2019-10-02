@@ -4,7 +4,7 @@ source('paths.r')
 source('NEFI_functions/zero_truncated_density.r')
 
 #set output path.----
-output.path <- 'test.png'
+output.path <- 'Fig._1._cal.val_r2_rmse.png'
 
 #Load calibration data.----
 d <- readRDS(NEON_dmilti.ddirch_analysis_summary.path)

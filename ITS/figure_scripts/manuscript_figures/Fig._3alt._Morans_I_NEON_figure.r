@@ -4,7 +4,7 @@ source('paths.r')
 library(boot)
 
 #output path.----
-output.path <- 'Moran_I_figure.png'
+output.path <- 'Fig._3._Moran_I_figure.png'
 
 #logit transform observed values and model residuals?----
 do_logit <- F
