@@ -2,14 +2,15 @@
 rm(list=ls())
 source('paths.r')
 source('NEFI_functions/zero_truncated_density.r')
+source('NEFI_functions/rsq_1.1.r')
 library(Metrics)
 
 #set output path.----
 output.path <- 'test.png'
 
 #Load calibration data.----
-cal <- readRDS(ted_ITS.prior_dmulti.ddirch_fg_JAGSfit) #all phylo and functional groups.
-cal <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)
+#cal <- readRDS(ted_ITS.prior_dmulti.ddirch_fg_JAGSfit) #failed multinomial-dirichlet models.
+cal <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)  #dirichlet-only.
 #re-order list, make function group first.
 cal <- cal[c('fg','phylum','class','order','family','genus')]
 names(cal)[1] <- 'functional'
@@ -62,6 +63,9 @@ all.site.rsq  <- list()
 all.core.rmse <- list()
 all.plot.rmse <- list()
 all.site.rmse <- list()
+all.core.stat <- list()
+all.plot.stat <- list()
+all.site.stat <- list()
 for(i in 1:length(val.cast)){
   fcast <- val.cast[[i]]
   core.rsq <- list()
@@ -70,8 +74,10 @@ for(i in 1:length(val.cast)){
   core.rmse <- list()
   plot.rmse <- list()
   site.rmse <- list()
+  core.stat <- list()
+  plot.stat <- list()
+  site.stat <- list()
   #core.level----
-  #y <- (pl.core[[i]]$abundances + 1)/pl.core[[i]]$seq_total
   y <- val.truth[[i]]$core.fit
   x <- fcast$core.fit$mean
   #make sure row and column orders match.
@@ -87,18 +93,21 @@ for(i in 1:length(val.cast)){
     fungi_name <- colnames(x)[k]
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
     obs.rmse <- rmse(y[,k], x[,k])
-    names(obs.rmse) <- names(rsq)
+    rsq.1 <- rsq_1.1(y[,k], x[,k])
     if(fungi_name == 'Ectomycorrhizal'){
       sub.y <- y[-grep('DSNY',rownames(y)),]
       sub.x <- x[-grep('DSNY',rownames(x)),]
       rsq <- summary(lm(sub.y[,k] ~ sub.x[,k]))$r.squared
       obs.rmse <- rmse(sub.y[,k], sub.x[,k])
-      names(obs.rmse) <- names(rsq)
+      rsq.1 <- rsq_1.1(sub.y[,k], sub.x[,k])
     }
     names(rsq) <- fungi_name
     if(fungi_name == 'other'){next}
     core.rsq [[k]] <- rsq
     core.rmse[[k]] <- obs.rmse
+    stat.return <- c(fungi_name, rsq, rsq.1, obs.rmse)
+    names(stat.return) <- c('name','rsq','rsq.1','rmse')
+    core.stat[[k]] <- stat.return
   }
   #plot.level----
   x <- fcast$plot.fit$mean
@@ -115,12 +124,14 @@ for(i in 1:length(val.cast)){
   for(k in 1:ncol(y)){
     fungi_name <- colnames(x)[k]
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
+    rsq.1 <- rsq_1.1(y[,k], x[,k])
     obs.rmse <- rmse(y[,k], x[,k])
     names(obs.rmse) <- names(rsq)
     if(fungi_name == 'Ectomycorrhizal'){
       sub.y <- y[-grep('DSNY',rownames(y)),]
       sub.x <- x[-grep('DSNY',rownames(x)),]
       rsq <- summary(lm(sub.y[,k] ~ sub.x[,k]))$r.squared
+      rsq.1 <- rsq_1.1(sub.y[,k], sub.x[,k])
       obs.rmse <- rmse(sub.y[,k], sub.x[,k])
       names(obs.rmse) <- names(rsq)
     }
@@ -128,6 +139,9 @@ for(i in 1:length(val.cast)){
     if(fungi_name == 'other'){next}
     plot.rsq [[k]] <- rsq
     plot.rmse[[k]] <- obs.rmse
+    stat.return <- c(fungi_name, rsq, rsq.1, obs.rmse)
+    names(stat.return) <- c('name','rsq','rsq.1','rmse')
+    plot.stat[[k]] <- stat.return
   }
   #site.level----
   x <- fcast$site.fit$mean
@@ -144,12 +158,14 @@ for(i in 1:length(val.cast)){
   for(k in 1:ncol(y)){
     fungi_name <- colnames(x)[k]
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
+    rsq.1 <- rsq_1.1(y[,k], x[,k])
     obs.rmse <- rmse(y[,k],x[,k])
     names(obs.rmse) <- names(rsq)
     if(fungi_name == 'Ectomycorrhizal'){
       sub.y <- y[-grep('DSNY',rownames(y)),]
       sub.x <- x[-grep('DSNY',rownames(x)),]
       rsq <- summary(lm(sub.y[,k] ~ sub.x[,k]))$r.squared
+      rsq.1 <- rsq_1.1(sub.y[,k], sub.x[,k])
       obs.rmse <- rmse(sub.y[,k], sub.x[,k])
       names(obs.rmse) <- names(rsq)
     }
@@ -157,6 +173,9 @@ for(i in 1:length(val.cast)){
     if(fungi_name == 'other'){next}
     site.rsq [[k]] <- rsq
     site.rmse[[k]] <- obs.rmse
+    stat.return <- c(fungi_name, rsq, rsq.1, obs.rmse)
+    names(stat.return) <- c('name','rsq','rsq.1','rmse')
+    site.stat[[k]] <- stat.return
   }
   #wrap up for return.----
   all.core.rsq [[i]] <- unlist(core.rsq)
@@ -165,6 +184,9 @@ for(i in 1:length(val.cast)){
   all.core.rmse[[i]] <- unlist(core.rmse)
   all.plot.rmse[[i]] <- unlist(plot.rmse)
   all.site.rmse[[i]] <- unlist(site.rmse)
+  all.core.stat[[i]] <- do.call(rbind, core.stat)
+  all.plot.stat[[i]] <- do.call(rbind, plot.stat)
+  all.site.stat[[i]] <- do.call(rbind, site.stat)
 }
 
 val.mu <- unlist(lapply(all.site.rsq, mean  ))

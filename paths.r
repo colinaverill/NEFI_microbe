@@ -189,6 +189,9 @@ NEON_dmulti.ddirch_fg_forecast_validation.path <- paste0(dir,'NEON_dmulti.ddirch
 NEON_dmulti.ddirch_cosmo_forecast_validation.path <- paste0(dir,'NEON_dmulti.ddirch_cosmo_forecast_validation.png')
 NEON_dmulti.ddirch_yeast_forecast_validation.path <- paste0(dir,'NEON_dmulti.ddirch_yeast_forecast_validation.png')
 
+#Analysis summary path.
+NEON_dmilti.ddirch_analysis_summary.path <- paste0(dir,'NEON_dmilti.ddirch_analysis_summary.path')
+
 #### ITS/pecan_gen: Uncertainty product paths. ####
 dir <- paste0(ITS_pecan_gen_dir,'uncertainty_products/')
 cmd <- paste0('mkdir -p ',dir)
