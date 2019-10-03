@@ -374,6 +374,16 @@ system(cmd)
      ted_sampling_dates.path <- paste0(dir,'tedersoo2014_dates.csv')
           NEON_ITS_link_file <- paste0(dir,'NEON_rawFilesList.csv')
             field_sites.path <- paste0(dir,'field-sites.csv')
+            
+            #### 16S/scc_gen/NEON_forecast_data ####
+            dir <- paste0(scc_gen_16S_dir, "NEON_forecast_data/") 
+            cmd <- paste0('mkdir -p ',dir)
+            system(cmd)
+            NEON_cps_fcast_ddirch_16S.path <- paste0(dir, "NEON_cps_fcast_ddirch_16S.rds")
+            
+            #### 16S results summary filepath. #####
+            NEON_dmilti.ddirch_analysis_summary_16S.path <- paste0(dir, 'NEON_dmilti.ddirch_analysis_summary_16S.rds')
+            
      
  
 #### NEON pre-release: otu tables from L. Stanish. ####
