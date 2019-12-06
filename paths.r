@@ -307,6 +307,9 @@ dir <- paste0(ITS_pecan_gen_dir,'NEON_forecasts/')
 cmd <- paste0('mkdir -p ',dir)
 system(cmd)
 
+#analyzing variable importance prior (tedersoo) data.
+effect.size_r2_correlation_data.path <- paste0(dir,'effect.size_r2_correlation_data.rds')
+
 #ddirch forecasts and variable importance output.
 NEON_site_fcast_fg.path <- paste0(dir,'NEON_fcast_site.level_fg.rds')
 NEON_site_fcast_genera.path <- paste0(dir,'NEON_fcast_site.level_genera.rds')
