@@ -2,6 +2,9 @@
 .Rhistory
 .Rapp.history
 
+#figure output directory.
+figures/
+
 # Session Data files
 .RData
 

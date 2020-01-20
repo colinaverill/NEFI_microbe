@@ -10,11 +10,11 @@
 #Request a machine with a ton of memory, and a ton of slots on that machine so you can use it.
 #$ -l mem_total=125G -pe omp 16
 #
-#Give the job a name
-#$ -N bahram_dada2
-#
 # Request buy-in nodes
 #$ -l buyin
+#
+#Give the job a name
+#$ -N NEON_16s_dada2
 #
 # Merge stderr into the stdout file, to reduce clutter
 #$ -j y
@@ -37,7 +37,7 @@ module load python/2.7.7
 #
 #
 # in the directory specified above, invoke this function:
-Rscript 16S/data_construction/prior_16S_bahram/4._process_seqs_dada2.r
+Rscript 16S/data_construction/NEON_16S/3._16S_sequence_processing/2._process_seqs_dada2.r
 #
 #
 #End of commands.

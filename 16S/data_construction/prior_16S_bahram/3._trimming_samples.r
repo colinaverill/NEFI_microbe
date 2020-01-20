@@ -27,7 +27,8 @@ bbduk.path <- 'NEFI_functions/bbmap/bbduk.sh'
 
 
 #trim left, "forward trim".
-for(i in 1:length(files)){
+#for(i in 1:length(files)){
+  for(i in 215:234){
   sample.name <- files[i]
   input_sample.path <- paste0(joined_seqs,sample.name)
   output_sample.path <- paste0(seq.dir,'q.trim.L/',sample.name)
@@ -40,7 +41,8 @@ for(i in 1:length(files)){
 }
 
 #trim right, "reverse trim". bbduk automatically looks for reverse complement.
-for(i in 1:length(files)){
+#for(i in 1:length(files)){
+  for(i in 215:234){
   sample.name <- files[i]
   input_sample.path <- paste0(seq.dir,'q.trim.L/',sample.name)
   output_sample.path <- paste0(seq.dir,'q.trim.R/',sample.name)
@@ -56,5 +58,7 @@ for(i in 1:length(files)){
 #clean up.
 cmd <- paste0('rm -rf ',seq.dir,'q.trim.L')
 system(cmd)
-cmd <- paste0('mv ',seq.dir,'q.trim.R ',seq.dir,'q.trim')
+cmd <- paste0('mv ',seq.dir,'q.trim.R/* ',seq.dir,'q.trim')
+system(cmd)
+cmd <- paste0('rm -rf ',seq.dir,'q.trim/q.trim.R')
 system(cmd)

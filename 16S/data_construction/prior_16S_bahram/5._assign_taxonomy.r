@@ -8,13 +8,19 @@ source('paths.r')
 source('NEFI_functions/tic_toc.r')
 library(doParallel)
 
+#specify output path for taxonomic table here.
+tax_output_path <- bahram_dada2_tax_table.path
+
 #Here i load an OTU table with column names as unique sequences to assign.
 otu <- readRDS(bahram_dada2_SV_table.path)
+#Rarefy OTU table.----
+# set.seed(5) # so that rarefaction is repeatable.
+# otu_rare <- otu[rowSums(otu) >= 5000,]
+# otu_rare <- vegan::rrarefy(otu_rare, 5000)
+# # save rarefied otu table
+# saveRDS(otu_rare, bahram_dada2_SV_table_rare_not_subset.path)
 
 to_assign <- colnames(otu) #grab sequences to assign.
-
-#specify output path here.
-tax_output_path <- bahram_dada2_tax_table.path
 
 #Everything from here below *should* just run and save where you told it to.
 

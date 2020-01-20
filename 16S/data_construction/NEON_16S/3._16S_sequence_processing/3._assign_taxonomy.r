@@ -1,4 +1,4 @@
-#Assign taxonomy using dada2 in parallel.
+#1. Assign taxonomy using dada2 in parallel. 2. Create table of most abundant genera.
 #This script assumes you have a taxonomy table where:
 #1. the row names are sample names.
 #2. the column names are the actual unique sequences.
@@ -7,6 +7,8 @@ rm(list=ls())
 source('paths.r')
 source('NEFI_functions/tic_toc.r')
 library(doParallel)
+
+#### 1. Assign taxonomy ####
 
 #Here i load an OTU table with column names as unique sequences to assign.
 otu <- readRDS(NEON_dada2_SV_table.path)
@@ -31,37 +33,12 @@ out <- dada2::assignTaxonomy(to_assign,greengenes.path,multithread = T)
 cat('Taxonomy assignment complete. ')
 toc()
 
-#how many cores to run on and therefore how many subsets to break taxonomy string into.
-#n <- detectCores()
-#registerDoParallel(cores=n)
-
-#set breakpoints for subsetting taxonomy list.
-#to_assign <- colnames(otu)
-#brk <- round(length(to_assign) / n)
-
-#use a foreach loop to do this in parallel on subsets.
-#tic()
-#cat('assigning taxonomy with the RDP classifier and greengenes training set...\n')
-#output.list <-
-#  foreach(i = 1:n) %dopar% {
-#    #tell loop where i of n taxonomy subset starts and ends.
-#    start <- (brk*i - brk) + 1
-#    end <- brk*i
-    #if you on the last subset go to end.
-#    if(i == n){end = length(to_assign)}
-    
-    #assign taxa
-#    tax.out <- dada2::assignTaxonomy(to_assign[start:end],greengenes.path)
-    
-    #return output to list
-#    return(tax.out)
-#  }
-#cat('Taxonomy assignment complete! yeahhhh.\n')
-#toc()
-
-#merge together output of parallel assignment.
-#out <- data.frame(do.call('rbind',output.list))
-
-
 #save output as your taxonomy file.
 saveRDS(out, tax_output_path)
+
+#Rarefy OTU table.----
+otu <- readRDS(NEON_dada2_SV_table.path)
+set.seed(5) # so that rarefaction is repeatable.
+otu <- otu[rowSums(otu) >= 5000,]
+otu <- vegan::rrarefy(otu, 5000)
+saveRDS(otu, NEON_dada2_SV_table_rare.path)

@@ -17,13 +17,12 @@ rev.files <- files[grep('_2.fastq',files)]
 for (i in 1:length(fwd.files)) {
   read1 <- fwd.files[i]
   read2 <- rev.files[i]
-sample <- sub('\\.fastq$', '', read1)  
+sample <- sub('\\.fastq$|\\.fastq\\.gz$', '', read1)  
 input1 <- paste0(seq.dir,  "raw_seqs/", read1)
 input2 <- paste0(seq.dir,  "raw_seqs/", read2)
   output <- paste0(seq.dir,'joined_seqs/',sample)
 cmd <- paste0("join_paired_ends.py -f ", input1," -r ", input2, " -o ", output)
 system(cmd)
-
 }
 
 

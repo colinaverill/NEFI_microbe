@@ -13,6 +13,9 @@
 #Give the job a name
 #$ -N bahram_RDP
 #
+# Request buyin nodes
+#$ -l buyin
+#
 # Merge stderr into the stdout file, to reduce clutter
 #$ -j y
 #$ -o $JOB_NAME.log

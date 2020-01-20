@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#This script is for generating the ESV table with requires a lot of RAM. 
+#This script is for calculating hierarchical means for NEON plots/sites for cosmopolitan phyla.
 #
 ########################################
 ####      commands for scc qsub     ####
@@ -11,7 +11,7 @@
 #$ -l mem_total=125G -pe omp 16
 #
 #Give the job a name
-#$ -N bahram_dada2
+#$ -N NEON_group_hier_means
 #
 # Request buy-in nodes
 #$ -l buyin
@@ -33,11 +33,13 @@
 #
 # load necessary modules 
 module load R/3.4.0
-module load python/2.7.7
+module load jags/4.0.0
 #
+# cd into directory
+cd /projectnb/talbot-lab-data/zrwerbin/NEFI_microbe/
 #
-# in the directory specified above, invoke this function:
-Rscript 16S/data_construction/prior_16S_bahram/4._process_seqs_dada2.r
+# invoke this function:
+Rscript 16S/data_construction/NEON_16S/3._16S_sequence_processing/5._group_hierarchical_means.r
 #
 #
 #End of commands.

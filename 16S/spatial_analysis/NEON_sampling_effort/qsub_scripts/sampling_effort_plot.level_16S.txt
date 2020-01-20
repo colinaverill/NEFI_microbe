@@ -1,25 +1,32 @@
 #!/bin/bash -l
-#This script is for subsetting the ESV table with requires a lot of RAM. 
-#
+# qsun for fitting functional group models.
 ########################################
 ####      commands for scc qsub     ####
 ########################################
-#Specfiy hard time limit for the job. 80 hours is plenty.
+#Specfiy hard time limit for the job.
 #$ -l h_rt=80:00:00
 #
-#Request a machine with a ton of memory, and a ton of slots on that machine so you can use it.
-#$ -l mem_total=125G -pe omp 16
+#Use N processors on a single machine. Running 3 chains in parallel, but i think a 4th will make things move better.
+#$ -pe omp 28
 #
 #Give the job a name
-#$ -N NEON_RDP
+#$ -N plot_eff_16S
 #
 # Merge stderr into the stdout file, to reduce clutter
 #$ -j y
 #$ -o $JOB_NAME.log
 #
 #
+# Request buyin nodes
+#$ -l buyin
+#
+#
 # Have the system send mail when the job begins and when the job is aborted or ended
 #$ -m ae
+#
+# Inherit the current environment (load modules python/2.7.7, qiime, and find binaries)
+# Make sure th load those modules in the command line before you submit the qsub
+#$ -V 
 #
 # end of qsub arguments
 #
@@ -30,11 +37,12 @@
 #
 # load necessary modules 
 module load R/3.4.0
-module load python/2.7.7
 #
+# cd into directory, for safety purposes
+cd /projectnb/talbot-lab-data/zrwerbin/NEFI_microbe
 #
 # in the directory specified above, invoke this function:
-Rscript 16S/data_construction/NEON_16S/3._assign_taxonomy.r
+Rscript 16S/spatial_analysis/NEON_sampling_effort/NEON_sampling_effort_plot.level_16S.r
 #
 #
 #End of commands.

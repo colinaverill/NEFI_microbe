@@ -48,7 +48,7 @@ truncation.length <- ceiling(median(get_truncation_length(reads[1:6], 30)))
 tic()
 cat('Begin quality filtering...\n')
 out <- filterAndTrim(reads, filt, truncLen=250, #truncation.length,
-                     maxN=0, maxEE=4, truncQ=2, rm.phix=TRUE,
+                     maxN=0, maxEE=2, truncQ=2, rm.phix=TRUE,
                      compress=TRUE, multithread=TRUE)
 cat('quality filtering complete.')
 toc()

@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#This script is for generating the ESV table with requires a lot of RAM. 
+#This script is for assigning taxonomy to the Delgado ESV table
 #
 ########################################
 ####      commands for scc qsub     ####
@@ -11,7 +11,7 @@
 #$ -l mem_total=125G -pe omp 16
 #
 #Give the job a name
-#$ -N bahram_dada2
+#$ -N delgado_assign_tax
 #
 # Request buy-in nodes
 #$ -l buyin
@@ -20,25 +20,17 @@
 #$ -j y
 #$ -o $JOB_NAME.log
 #
-#
 # Have the system send mail when the job begins and when the job is aborted or ended
 #$ -m ae
-#
-# end of qsub arguments
 #
 ########################################
 #### begin commands to run R script ####
 ########################################
 #
-#
-# load necessary modules 
-module load R/3.4.0
-module load python/2.7.7
-#
+cd /usr3/graduate/zrwerbin/NEFI_microbe
 #
 # in the directory specified above, invoke this function:
-Rscript 16S/data_construction/prior_16S_bahram/4._process_seqs_dada2.r
-#
+Rscript 16S/data_construction/delgado/03._assign_taxonomy.r
 #
 #End of commands.
 #

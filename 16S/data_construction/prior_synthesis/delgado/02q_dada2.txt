@@ -8,10 +8,10 @@
 #$ -l h_rt=80:00:00
 #
 #Request a machine with a ton of memory, and a ton of slots on that machine so you can use it.
-#$ -l mem_total=125G -pe omp 16
+#$ -l mem_total=125G -pe omp 28
 #
 #Give the job a name
-#$ -N bahram_dada2
+#$ -N delgado_dada2_2
 #
 # Request buy-in nodes
 #$ -l buyin
@@ -31,13 +31,11 @@
 ########################################
 #
 #
-# load necessary modules 
-module load R/3.4.0
-module load python/2.7.7
+cd /usr3/graduate/zrwerbin/NEFI_microbe
 #
 #
 # in the directory specified above, invoke this function:
-Rscript 16S/data_construction/prior_16S_bahram/4._process_seqs_dada2.r
+Rscript 16S/data_construction/delgado/02._dada2.r
 #
 #
 #End of commands.
