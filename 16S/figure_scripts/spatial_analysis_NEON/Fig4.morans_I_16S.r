@@ -15,13 +15,13 @@ do_logit <- F
 
 #Load data.----
 d_all <- readRDS(NEON_phylo_fg_plot.site_obs_16S.path)
-loc_all <- readRDS(dp1.10086.001_output.path)
+loc_all <- readRDS(dp1.10086.00_output.path)
 #spatial forecast.
 fcast <- readRDS(NEON_cps_fcast_ddirch_16S.path)
 
 #Load data.----
 # read in obs table that links deprecatedVialID and geneticSampleID
-map <- readRDS(core_obs_data.path)
+map <- readRDS(core_obs.path)
 
 #Calculate spatial statistics for all levels on forecast residuals.----
 a_out_16S <- list() #spatial signal of raw values.

@@ -302,10 +302,13 @@ NEON_site.level_yeast_obs_fastq.path <- paste0(dir,'NEON_site.level_yeast_obs_fa
 NEON_plot.level_phyla_obs_fastq.path <- paste0(dir,'NEON_plot.level_phyla_obs_fastq.rds')
 NEON_site.level_phyla_obs_fastq.path <- paste0(dir,'NEON_site.level_phyla_obs_fastq.rds')
 
-#### ITS/pecan_gen: Forecasts, variance decomposition and variable importance output paths.----
+#### ITS/pecan_gen: Forecasts, variance decomposition, variable importance, Moran's I analysis output paths.----
 dir <- paste0(ITS_pecan_gen_dir,'NEON_forecasts/')
 cmd <- paste0('mkdir -p ',dir)
 system(cmd)
+
+#Moran's I analysis summary across NEON network for fungi.
+NEON_ITS_morans_I_data.path <- paste0(dir,'NEON_ITS_morans_I_data.rds')
 
 #analyzing variable importance prior (tedersoo) data.
 effect.size_r2_correlation_data.path <- paste0(dir,'effect.size_r2_correlation_data.rds')

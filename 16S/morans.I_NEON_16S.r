@@ -2,32 +2,45 @@
 rm(list=ls())
 source('paths.r')
 library(boot)
+library(RCurl)
+script <- getURL("https://raw.githubusercontent.com/colinaverill/NEFI_microbe/master/paths.r", ssl.verifypeer = FALSE)
+eval(parse(text = script))
+source('paths_fall2019.r')
 
 #output path.----
-#output.path <- 'Moran_I_figure.png'
-output.path <- NEON_ITS_morans_I_data.path
+output.path <- NEON_16S_morans_I_data.path
 
 #logit transform observed values and model residuals?----
 do_logit <- F
 
 #Load data.----
-d_all <- readRDS(NEON_all.phylo.levels_plot.site_obs_fastq_1k_rare.path)
+d_all <- readRDS(NEON_phylo_fg_plot.site_obs_16S.path)
 loc_all <- readRDS(dp1.10086.00_output.path)
 #spatial forecast.
-fcast <- readRDS(NEON_site_fcast_all_groups_1k_rare.path)
+fcast <- readRDS(NEON_cps_fcast_ddirch_16S.path)
+
+#Load data.----
+# read in obs table that links deprecatedVialID and geneticSampleID
+map <- readRDS(core_obs.path)
 
 #Calculate spatial statistics for all levels on forecast residuals.----
-a_out <- list() #spatial signal of raw values.
-b_out <- list() #spatial signal of model residuals.
+a_out_16S <- list() #spatial signal of raw values.
+b_out_16S <- list() #spatial signal of model residuals.
 for(k in 1:length(d_all)){
   #Grab tax/functional level.
-  d <- d_all[[k]]
-  d <- d$core.fit
+  d <- d_all[[k]] 
+  d <- as.data.frame(d$core.fit)
   loc <- loc_all
   pred <- fcast[[k]]$core.fit$mean
   
   #match up data, subset to mineral soil, drop stuff from identical locations.----
-  rownames(d) <- gsub('-GEN','',rownames(d))
+  map <- map[,c("deprecatedVialID", "geneticSampleID")]
+  map$geneticSampleID <- gsub('-GEN','',map$geneticSampleID)
+  d$deprecatedVialID <- rownames(d)
+  d <- merge(d, map, by = "deprecatedVialID")
+  rownames(d) <- d$geneticSampleID
+  d$geneticSampleID <- NULL
+  d$deprecatedVialID <- NULL
   #drop organic horizons. Generates zero distances.
   loc <- loc[loc$horizon == 'M',]
   loc$lat_lon <- paste0(loc$adjDecimalLongitude, loc$adjDecimalLatitude)
@@ -36,10 +49,20 @@ for(k in 1:length(d_all)){
   loc <- loc[loc$sampleID %in% rownames(d),]
   d <-   d[rownames(d) %in% loc$sampleID,]
   loc <- loc[order(match(loc$sampleID, rownames(d))),]
+  
+  #make sure pred/obs are in both dataframes
   pred <- pred[rownames(pred) %in% rownames(d),]
-  pred <- pred[order(match(rownames(pred), rownames(d))),]
+  d <- d[rownames(d) %in% rownames(pred),]
+  pred <- pred[colnames(pred) %in% colnames(d),]
+  d <- d[colnames(d) %in% colnames(pred),,drop=FALSE]
   #make sure predictions and observation columns are in the same order.
   pred <- pred[,order(match(colnames(pred), colnames(d)))]
+  d <- d[,order(match(colnames(d), colnames(pred)))]
+  loc <- loc[loc$sampleID %in% rownames(d),]
+  
+  #remove "other" column
+  pred <- pred[,colnames(pred) != "other", drop=FALSE]
+  d <- d[,colnames(d) != "other", drop=FALSE]
   
   #generate model residuals as a logit difference.
   resid <- (d) - (pred)
@@ -87,85 +110,55 @@ for(k in 1:length(d_all)){
   resid_out <- data.frame(do.call(rbind, resid_out))
   
   #return output.----
-  a_out[[k]] <- moran_out
-  b_out[[k]] <- resid_out
+  a_out_16S[[k]] <- moran_out
+  b_out_16S[[k]] <- resid_out
   
 }
-names(a_out) <- names(d_all)[1:5]
-names(b_out) <- names(d_all)[1:5]
+
+names(a_out_16S) <- names(d_all)
+names(b_out_16S) <- names(d_all)
+
+# flatten 12 functional group models into one list item
+fg_a <- a_out_16S[6:18]
+fg_a_group <- dplyr::bind_rows(fg_a)
+fg_a_group <- list(fg_a_group)
+names(fg_a_group) <- "functional"
+a_out_16S <- c(fg_a_group, a_out_16S[1:5]) # recombine fg with phylo groups
+
+fg_b <- b_out_16S[6:18]
+fg_b_group <- dplyr::bind_rows(fg_b)
+fg_b_group <- list(fg_b_group)
+names(fg_b_group) <- "functional"
+b_out_16S <- c(fg_b_group, b_out_16S[1:5]) # recombine fg with phylo groups
 
 #calculate average morans I for all groups.----
-a_avg <- list()
-b_avg <- list()
-for(i in 1:length(a_out)){
+a_avg_16S <- list()
+b_avg_16S <- list()
+for(i in 1:length(a_out_16S)){
   #no model.
-  a.mu <- mean(a_out[[i]]$moran)
-  a.sd <-   sd(a_out[[i]]$moran)
-  a.se <- a.sd/sqrt(nrow(a_out[[i]]))
+  a.mu <- mean(a_out_16S[[i]]$moran)
+  a.sd <-   sd(a_out_16S[[i]]$moran)
+  a.se <- a.sd/sqrt(nrow(a_out_16S[[i]]))
   to_return.a <- c(a.mu, a.sd, a.se)
   names(to_return.a) <- c('mu','sd','se')
-  a_avg[[i]] <- to_return.a
+  a_avg_16S[[i]] <- to_return.a
   #residuals of model.
-  b.mu <- mean(b_out[[i]]$moran)
-  b.sd <-   sd(b_out[[i]]$moran)
-  b.se <- b.sd/sqrt(nrow(b_out[[i]]))
+  b.mu <- mean(b_out_16S[[i]]$moran)
+  b.sd <-   sd(b_out_16S[[i]]$moran)
+  b.se <- b.sd/sqrt(nrow(b_out_16S[[i]]))
   to_return.b <- c(b.mu, b.sd, b.se)
   names(to_return.b) <- c('mu','sd','se')
-  b_avg[[i]] <- to_return.b
+  b_avg_16S[[i]] <- to_return.b
   
 }
-a_avg <- data.frame(do.call(rbind, a_avg))
-b_avg <- data.frame(do.call(rbind, b_avg))
-rownames(a_avg) <- names(fcast)
-rownames(b_avg) <- names(fcast)
+a_avg_16S <- data.frame(do.call(rbind, a_avg_16S))
+b_avg_16S <- data.frame(do.call(rbind, b_avg_16S))
+rownames(a_avg_16S) <- names(a_out_16S)
+rownames(b_avg_16S) <- names(b_out_16S)
 
 #assign x positions, functional groups first.
-a_avg$x <- c(2:(nrow(a_avg)), 1)
-b_avg$x <- c(2:(nrow(b_avg)), 1)
+a_avg_16S$x <- c(1:(nrow(a_avg_16S)))
+b_avg_16S$x <- c(1:(nrow(b_avg_16S)))
 
-#save summary output.----
-saveRDS(a_avg, output.path)
-
-
-#setup figure output.----
-#png(filename=output.path,width=7,height=5,units='in',res=300)
-
-#plot.-----
-par(mfrow=c(1,2), mar = c(5,3,.5,1), oma = c(1,1.5,1,1))
-#Raw spatial signal FUNGI.
-limy <- c(0, max(a_avg$mu + a_avg$se))
-plot(mu ~ x, data = a_avg, cex = 2, pch = 16, ylim = limy,
-     ylab = NA, xlab = NA, xaxt = 'n', bty = 'l')
-#error bars.
-mu <- a_avg$mu
-x <- a_avg$x
-upr <- mu + a_avg$se
-lwr <- mu - a_avg$se
-arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
-#x-axis.
-x.lab <- rownames(a_avg)
-x.lab[x.lab == 'fg'] <- 'functional'
-axis(1, at=a_avg$x, labels= NA, cex = 1, srt = 45)
-text(x= a_avg$x + .12, y = -0.06, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = 1)
-mtext("Moran's I", side = 2, line = 2.5, cex = 1.2)
-mtext('Fungi',side = 3, line = -2, cex = 1.7, adj  = 0.95)
-
-#FUTURE BACTERIA PLOT. TURN CEX BACK ON WHEN READY FOR POINTS.
-plot(mu ~ x, data = a_avg, cex = 0, pch = 16, ylim = limy,
-     ylab = NA, xlab = NA, xaxt = 'n', bty = 'l')
-#error bars.
-#mu <- a_avg$mu
-#x <- a_avg$x
-#upr <- mu + a_avg$se
-#lwr <- mu - a_avg$se
-#arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
-#x-axis.
-x.lab <- rownames(a_avg)
-x.lab[x.lab == 'fg'] <- 'functional'
-axis(1, at=a_avg$x, labels= NA, cex = 1, srt = 45)
-text(x= a_avg$x + .12, y = -0.06, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = 1)
-mtext('Bacteria',side = 3, line = -2, cex = 1.7, adj  = 0.95)
-
-
-#end plot.----
-#dev.off()
+#Save output.----
+saveRDS(a_avg_16S, output.path)

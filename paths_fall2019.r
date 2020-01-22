@@ -400,6 +400,10 @@ cmd <- paste0('mkdir -p ',dir)
 system(cmd)
 NEON_cps_fcast_ddirch_16S.path <- paste0(dir, "NEON_cps_fcast_ddirch_16S.rds")
 
+#### Moran's I analysis summary across NEON network for bacteria. ####
+NEON_16S_morans_I_data.path <- paste0(dir,'NEON_16S_morans_I_data.rds')
+
+
 #### 16S results summary filepath. #####
 NEON_dmilti.ddirch_analysis_summary_16S.path <- paste0(dir, 'NEON_dmilti.ddirch_analysis_summary_16S.rds')
 
