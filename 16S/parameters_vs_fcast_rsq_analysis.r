@@ -52,9 +52,33 @@ for(i in 1:length(pl)){
 }
 par.out <- do.call(rbind, par.out)
 
+#Generate rsq from prior fit.----
+rsq.pl <- list()
+for(i in 1:length(pl)){
+  if(names(pl)[i] == 'functional'){next}
+  prd <- pl[[i]]$predicted
+  obs <- pl[[i]]$observed
+  rsq.lev <- list()
+  for(k in 1:ncol(prd)){
+    m <- lm(obs[,k] ~ prd[,k])
+    rsq.lev[[k]] <- summary(m)$r.squared
+  }
+  rsq.lev <- unlist(rsq.lev)
+  rsq.lev <- data.frame(colnames(prd),rsq.lev)
+  colnames(rsq.lev) <- c('name','rsq.ins')
+  rsq.lev <- rsq.lev[!(rsq.lev$name %in% c('other')),]
+  rsq.pl[[i]] <- rsq.lev
+}
+rsq.pl <- data.frame(do.call(rbind, rsq.pl))
+
+
 #drop any duplicated entries in par.out. this won't matter eventually.
 duped <- rownames(par.out)[duplicated(rownames(par.out))]
 par.out <- par.out[!(rownames(par.out) %in% duped),]
+#rsq.pl  <- rsq.pl [!(rsq.pl$name %in% duped),]
+#par.out <- par.out[rownames(par.out) %in% rsq.pl$name,]
+#rsq.pl <- rsq.pl[order(match(rsq.pl$name, rownames(par.out))),]
+#pl.check <- cbind(par.out, rsq.pl)
 
 #Get in and out of sample stats tables in same order.-----
 ins.dat <- do.call(rbind, ins.dat)
