@@ -129,7 +129,7 @@ par.pca.16S <- prcomp(t(d.16S), center = TRUE,scale. = TRUE)
 
 
 #png save line.----
-png(filename=output.path,width=8,height=11,units='in',res=300)
+png(filename=output.path,width=11,height=8,units='in',res=300)
 
 #plot code ITS.----
 #PCA plot.
@@ -137,10 +137,9 @@ lab <- colnames(d.ITS)
 rownames(par.pca.ITS$rotation) <- c('intercept','%C','C:N','pH','NPP','MAP','MAT','forest','conifer','relEM')
 unit.scale = 0.5
 PCA.plot.ITS <- ggbiplot(par.pca.ITS, labels = lab, groups = col.plot.ITS) +  xlim(-2.25, 2.5) + 
-  theme(legend.position="top") +
+  theme(legend.position="top") +   guides(color = guide_legend(nrow = 1)) + 
   theme(plot.margin = unit(c(0,2*unit.scale,unit.scale,unit.scale), 'cm')) + 
-  labs(tag = "A")
-
+  labs(tag = "A") + ggtitle('Fungi') 
 
 #Plot of best fitting predictor to RSQ values.
 x.var <- sum.ITS$rsq[order(sum.ITS$rsq)][length(sum.ITS$rsq)]
@@ -161,15 +160,17 @@ scatter.plot.ITS <- ggplot(scatter.dat, aes(x=x, y=y), size = 3) +
   theme(axis.line = element_line(colour = "black"), panel.border = element_blank()) + #add x-y axes, drop bounding box. 
   scale_y_continuous(expand = expand_scale(mult = c(.01, .02))) + #change where y-axis cuts off.
   scale_x_continuous(expand = expand_scale(mult = c(.01, .01)))  + #change where x-axis cuts off.
+  theme(axis.text.x=element_text(size=rel(0.5))) +                  #reduce x-axis text size.
   geom_abline(slope = coef(mod)[2], intercept = coef(mod)[1], size = 1) + #add regression line.
   theme(plot.margin = unit(c(unit.scale,2*unit.scale,2*unit.scale,unit.scale), 'cm')) +
-  geom_text(x=0.60, y = 0.05, label=expression(paste(R^2,'= 0.41'))) +
+  geom_text(x=0.50, y = 0.05, label=expression(paste(R^2,'= 0.41'))) +
   labs(tag = "B")
 
 #Ranked barplot of explanatory power
 x <- sum.ITS$rsq
 x <- x[order(x, decreasing = T)]
 y <- names(x)
+bar.y.max <- max(x) #set common y limit for bar plot across fungi/bacteria.
 bar.dat <- data.frame(x,y)
 bar.plot.ITS <-ggplot(data=bar.dat, aes(x=y, y=x)) +
   geom_bar(stat="identity") + 
@@ -181,6 +182,7 @@ bar.plot.ITS <-ggplot(data=bar.dat, aes(x=y, y=x)) +
   xlab('') + ylab('Predictive Capacity') + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size =12)) +
   theme(plot.margin = unit(c(unit.scale,2*unit.scale,0,unit.scale), 'cm')) +
+  coord_cartesian(ylim = c(0, bar.y.max)) +
   labs(tag = "C")
 
 
@@ -191,12 +193,13 @@ lab <- colnames(d.16S)
 rownames(par.pca.16S$rotation) <- c('intercept','pH','MAP','MAT','NPP','relEM')
 unit.scale = 0.5
 PCA.plot.16S <- ggbiplot(par.pca.16S, labels = lab, groups = col.plot.16S) +  xlim(-2.25, 2.5) + 
-  theme(legend.position="top") +
+  theme(legend.position="top") +   guides(color = guide_legend(nrow = 1)) + 
   theme(plot.margin = unit(c(0,2*unit.scale,unit.scale,unit.scale), 'cm')) + 
-  labs(tag = "D")
+  labs(tag = "D") + ggtitle('Bacteria')
 
 #Plot of best fitting predictor to RSQ values.
 x.var <- sum.16S$rsq[order(sum.16S$rsq)][length(sum.16S$rsq)]
+x.var <- sum.16S$rsq['pH'] #select pH since relEM is a negative correlation.
 x <- abs(sum.16S$dat[,names(x.var)])
 y <- sum.16S$dat$ins.rsq.1
 y <- ifelse(y < 0, 0, y)
@@ -217,7 +220,7 @@ scatter.plot.16S <- ggplot(scatter.dat, aes(x=x, y=y), size = 3) +
   geom_abline(slope = coef(mod)[2], intercept = coef(mod)[1], size = 1) + #add regression line.
   theme(plot.margin = unit(c(unit.scale,2*unit.scale,2*unit.scale,unit.scale), 'cm')) +
   #CHANGE R2 BY "HAND" HERE.
-  geom_text(x=0.60, y = 0.05, label=expression(paste(R^2,'= 0.41'))) +
+  geom_text(x=0.40, y = 0.75, label=expression(paste(R^2,'= 0.05'))) +
   labs(tag = "E")
 
 #Ranked barplot of explanatory power
@@ -235,18 +238,26 @@ bar.plot.16S <-ggplot(data=bar.dat, aes(x=y, y=x)) +
   xlab('') + ylab('Predictive Capacity') + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size =12)) +
   theme(plot.margin = unit(c(unit.scale,2*unit.scale,0,unit.scale), 'cm')) +
+  coord_cartesian(ylim = c(0, bar.y.max)) +
   labs(tag = "F")
 
+#grab legend.----
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
 
+mylegend<-g_legend(PCA.plot.ITS)
 
 #panel plots together.----
 #Just ITS.
-grid.arrange(PCA.plot.ITS, scatter.plot.ITS, bar.plot.ITS,
-             widths = c(2, 2),
-             heights = c(4,2),
-             layout_matrix = rbind(c(1,1),
-                                   c(2,3))
-)
+#grid.arrange(PCA.plot.ITS, scatter.plot.ITS, bar.plot.ITS,
+#             widths = c(2, 2),
+#             heights = c(4,2),
+#             layout_matrix = rbind(c(1,1),
+#                                   c(2,3))
+#)
              
 #ITS and 16S
 #grid.arrange(PCA.plot.ITS, scatter.plot.ITS, bar.plot.ITS,
@@ -257,7 +268,16 @@ grid.arrange(PCA.plot.ITS, scatter.plot.ITS, bar.plot.ITS,
 #                        c(2,3,5,6))
 #)
 
-
+#ITS and 16S common legend.
+grid.arrange(mylegend,
+             (PCA.plot.ITS + theme(legend.position = 'none')), scatter.plot.ITS, bar.plot.ITS,
+             (PCA.plot.16S + theme(legend.position = 'none')), scatter.plot.16S, bar.plot.16S,
+             widths = c(2, 2, 2, 2),
+             heights = c(0.5,4,2),
+             layout_matrix = rbind(c(1,1,1,1),
+                                   c(2,2,5,5),
+                                   c(3,4,6,7))
+)
 
 #end plot.----
 dev.off()
