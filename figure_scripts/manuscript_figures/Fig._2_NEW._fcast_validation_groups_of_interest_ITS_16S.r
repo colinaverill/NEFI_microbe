@@ -9,8 +9,8 @@ source('NEFI_functions/rsq_1.1.r')
 output.path <- 'Fig._2._representative_groups.png'
 
 #groups of interest----
-namey <- c('Russula','Ascomycota','acidobacteria')
-level <- c('genus','phylum','phylum')
+namey <- c('Russula','Ascomycota','oligotroph')
+level <- c('genus','phylum','oligotroph')
 
 #grab forecasts and observations of functional and phylogenetic groups.----
 fcast.ITS <- readRDS(NEON_site_fcast_all_groups_1k_rare.path)
