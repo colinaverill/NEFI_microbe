@@ -126,11 +126,12 @@ for(i in 1:length(val.cast)){
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
     rsq.1 <- rsq_1.1(y[,k], x[,k])
     obs.rmse <- rmse(y[,k], x[,k])
-    abundance <- mean(y[,k])
-    rmse.norm <- obs.rmse / abundance
+    abundance.y <- mean(y[,k])
+    abundance.x <- mean(x[,x])
+    rmse.norm <- obs.rmse / abundance.y
     if(name == 'other'){next}
-    stat.return <- c(name, rsq, rsq.1, obs.rmse,rmse.norm)
-    names(stat.return) <- c('name','rsq','rsq.1','rmse','rmse.norm')
+    stat.return <- c(name, rsq, rsq.1, obs.rmse,rmse.norm,abundance.y,abundance.x)
+    names(stat.return) <- c('name','rsq','rsq.1','rmse','rmse.norm','abundance.y','abundance.x')
     core.lev.stat[[k]] <- stat.return
   }
   #plot.level----
@@ -150,11 +151,12 @@ for(i in 1:length(val.cast)){
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
     rsq.1 <- rsq_1.1(y[,k], x[,k])
     obs.rmse <- rmse(y[,k], x[,k])
-    abundance <- mean(y[,k])
-    rmse.norm <- obs.rmse / abundance
+    abundance.y <- mean(y[,k])
+    abundance.x <- mean(x[,k])
+    rmse.norm <- obs.rmse / abundance.y
     if(name == 'other'){next}
-    stat.return <- c(name, rsq, rsq.1, obs.rmse,rmse.norm)
-    names(stat.return) <- c('name','rsq','rsq.1','rmse','rmse.norm')
+    stat.return <- c(name, rsq, rsq.1, obs.rmse,rmse.norm,abundance.y,abundance.x)
+    names(stat.return) <- c('name','rsq','rsq.1','rmse','rmse.norm','abundance.y','abundance.x')
     plot.lev.stat[[k]] <- stat.return
   }
   #site.level----
@@ -174,11 +176,12 @@ for(i in 1:length(val.cast)){
     rsq <- summary(lm(y[,k] ~ x[,k]))$r.squared
     rsq.1 <- rsq_1.1(y[,k], x[,k])
     obs.rmse <- rmse(y[,k], x[,k])
-    abundance <- mean(y[,k])
-    rmse.norm <- obs.rmse / abundance
+    abundance.y <- mean(y[,k])
+    abundance.x <- mean(x[,k])
+    rmse.norm <- obs.rmse / abundance.y
     if(name == 'other'){next}
-    stat.return <- c(name, rsq, rsq.1, obs.rmse,rmse.norm)
-    names(stat.return) <- c('name','rsq','rsq.1','rmse','rmse.norm')
+    stat.return <- c(name, rsq, rsq.1, obs.rmse,rmse.norm,abundance.y,abundance.x)
+    names(stat.return) <- c('name','rsq','rsq.1','rmse','rmse.norm','abundance.y','abundance.x')
     site.lev.stat[[k]] <- stat.return
   }
   #wrap up for return.----

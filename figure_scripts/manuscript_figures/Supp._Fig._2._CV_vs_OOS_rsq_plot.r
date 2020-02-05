@@ -2,6 +2,7 @@
 rm(list=ls())
 source('paths.r')
 source('NEFI_functions/zero_truncated_density.r')
+source('NEFI_functions/rsq_1.1.r')
 
 #set figure out put path.----
 output.path <- 'test.png'
@@ -96,6 +97,7 @@ for(i in 1:length(cv.val.core)){
   #match row and column names.
   y <- y[,order(match(colnames(y), colnames(xx)))]
   x <- x[rownames(x) %in% rownames(y),]
+  y <- y[rownames(y) %in% rownames(x),]
   y <- y[order(match(rownames(y), rownames(x))),]
   #Get R2 for each column.
   lev.stats <- list()
@@ -107,6 +109,7 @@ for(i in 1:length(cv.val.core)){
     rss <- sum((x[,j] -      y[,j])  ^ 2)  ## residual sum of squares
     tss <- sum((y[,j] - mean(y[,j])) ^ 2)  ##    total sum of squares
     rsq1 <- 1 - rss/tss
+    rsq1 <- rsq_1.1(y[,j], x[,j])          ## new rsq_1.1 function.
     if(rsq1 < 0){rsq1 <- 0}
     #RMSE.
     rmse <- sqrt(mean(fit$residuals^2))
@@ -116,6 +119,7 @@ for(i in 1:length(cv.val.core)){
   lev.stats <- do.call(rbind, lev.stats)
   colnames(lev.stats) <- c('rsq','rsq1','rmse')
   rownames(lev.stats) <- colnames(y)
+  lev.stats <- lev.stats[-(rownames(lev.stats) %in% 'other'),]
   core.list[[i]] <- lev.stats
 }
 names(core.list) <- names(cv.dat.core)
@@ -131,6 +135,7 @@ for(i in 1:length(cv.val.plot)){
   #match row and column names.
   y <- y[,order(match(colnames(y), colnames(x)))]
   x <- x[rownames(x) %in% rownames(y),]
+  y <- y[rownames(y) %in% rownames(x),]
   y <- y[order(match(rownames(y), rownames(x))),]
   #Get R2 for each column.
   lev.stats <- list()
@@ -142,6 +147,7 @@ for(i in 1:length(cv.val.plot)){
     rss <- sum((x[,j] -      y[,j])  ^ 2)  ## residual sum of squares
     tss <- sum((y[,j] - mean(y[,j])) ^ 2)  ## total sum of squares
     rsq1 <- 1 - rss/tss
+    rsq1 <- rsq_1.1(y[,j], x[,j])          ## new rsq_1.1 function.
     if(rsq1 < 0){rsq1 <- 0}
     #RMSE.
     rmse <- sqrt(mean(fit$residuals^2))
@@ -151,10 +157,36 @@ for(i in 1:length(cv.val.plot)){
   lev.stats <- do.call(rbind, lev.stats)
   colnames(lev.stats) <- c('rsq','rsq1','rmse')
   rownames(lev.stats) <- colnames(y)
+  lev.stats <- lev.stats[-(rownames(lev.stats) %in% 'other'),]
   plot.list[[i]] <- lev.stats
 }
 names(plot.list) <- names(cv.val.plot)
 
+
+#Get means by level.----
+#core scale.
+core.lev.mu <- list()
+for(i in 1:length(core.list)){
+  z <- data.frame(core.list[[i]])
+  core.lev.mu[[i]] <- mean(z$rsq, na.rm = T)
+}
+core.lev.mu <- unlist(core.lev.mu)
+names(core.lev.mu) <- names(core.list)
+names(core.lev.mu)[length(core.lev.mu)] <- 'functional'
+ref.order <- c(length(core.lev.mu), 1:(length(core.lev.mu) - 1))
+core.lev.mu <- core.lev.mu[ref.order]
+
+#plot scale.
+plot.lev.mu <- list()
+for(i in 1:length(plot.list)){
+  z <- data.frame(plot.list[[i   ]])
+  plot.lev.mu[[i]] <- mean(z$rsq, na.rm = T)
+}
+plot.lev.mu <- unlist(plot.lev.mu)
+names(plot.lev.mu) <- names(plot.list)
+names(plot.lev.mu)[length(plot.lev.mu)] <- 'functional'
+ref.order <- c(length(plot.lev.mu), 1:(length(plot.lev.mu) - 1))
+plot.lev.mu <- plot.lev.mu[ref.order]
 
 #Collapse to 6x2 data frames.----
 cv.core.r2   <- list()
