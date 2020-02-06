@@ -6,7 +6,7 @@ library(ggplot2)
 library(ggalt)
 
 #set output path.----
-out.path <- 'Supp._Fig._4._sample_map.png'
+out.path <- 'figures/Supp._Fig._4._sample_map.png'
 
 #load location data and format.----
 d <- readRDS(ITS_site_dates.path)

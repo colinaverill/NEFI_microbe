@@ -5,7 +5,7 @@ source('paths_fall2019.r')
 source('paths.r')
 
 #set output path.
-output.path <- 'Supp._Fig._3._variance_decomposition.png'
+output.path <- 'figures/Supp._Fig._3._variance_decomposition.png'
 
 #load data.----
 d.ITS <- readRDS(NEON_ddirch_var.decomp_all_groups.path)

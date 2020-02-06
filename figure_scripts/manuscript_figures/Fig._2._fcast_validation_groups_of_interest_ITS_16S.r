@@ -6,7 +6,7 @@ source('paths.r')
 source('NEFI_functions/rsq_1.1.r')
 
 #set output path.----
-output.path <- 'Fig._2._representative_groups.png'
+output.path <- 'figures/Fig._2._representative_groups.png'
 
 #groups of interest----
 namey <- c('Russula','Ascomycota','oligotroph')

@@ -6,7 +6,7 @@ source('NEFI_functions/zero_truncated_density.r')
 source('NEFI_functions/rsq_1.1.r')
 
 #set figure out put path.----
-output.path <- 'Supp._Fig._2._cross.validation_r2.png'
+output.path <- 'figures/Supp._Fig._2._cross.validation_r2.png'
 
 #Load ITS cross-validation data..----
 #Cross validation forecasts

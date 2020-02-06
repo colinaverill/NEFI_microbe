@@ -5,7 +5,7 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'Supp._Fig._1._CV.png'
+output.path <- 'figures/Supp._Fig._1._CV.png'
 
 #Load calibration/validation rsq.1 data, Moran's I data.----
 d.ITS <- readRDS(NEON_dmilti.ddirch_analysis_summary.path)
