@@ -385,26 +385,23 @@ NEON_sampling_effort_analysis_plot.level_16S.path <- paste0(dir, "NEON_sampling_
 prior_delgado_ddirch_16S.path <- paste0(dir, "prior_delgado_ddirch_16S.rds")
 prior_delgado_ddirch_16S_with_relEM.path <- paste0(dir, "prior_delgado_ddirch_16S_with_relEM.rds")
 
-#Comparing parameters to in/out of sample r2.
-effect.size_r2_correlation_data_16S.path <- paste0(dir,'effect.size_r2_correlation_data_16S.rds')
-
-  #### 16S/scc_gen/JAGS_output/cross_val: cross-validation calibration/forecasts at NEON ####
-  dir <- paste0(scc_gen_16S_dir, "JAGS_output/cross_val/") 
-  cmd <- paste0('mkdir -p ',dir)
-  system(cmd)
-  core.CV_NEON_ddirch_16S_JAGSfit <- paste0(dir, "core.CV_NEON_ddirch_16S_JAGSfit.rds") # JAGS fits for priors
-  plot.CV_NEON_ddirch_16S_JAGSfit <- paste0(dir, "plot.CV_NEON_ddirch_16S_JAGSfit.rds") # JAGS fits for priors
-  core.CV_NEON_fcast_16S.path <- paste0(dir, "core.CV_NEON_fcast_16S.rds")
-  plot.CV_NEON_fcast_16S.path <- paste0(dir, "plot.CV_NEON_fcast_16S.rds")
+#### 16S/scc_gen/JAGS_output/cross_val: cross-validation calibration/forecasts at NEON ####
+dir <- paste0(scc_gen_16S_dir, "JAGS_output/cross_val/") 
+cmd <- paste0('mkdir -p ',dir)
+system(cmd)
+core.CV_NEON_ddirch_16S_JAGSfit <- paste0(dir, "core.CV_NEON_ddirch_16S_JAGSfit.rds") # JAGS fits for priors
+plot.CV_NEON_ddirch_16S_JAGSfit <- paste0(dir, "plot.CV_NEON_ddirch_16S_JAGSfit.rds") # JAGS fits for priors
+core.CV_NEON_fcast_16S.path <- paste0(dir, "core.CV_NEON_fcast_16S.rds")
+plot.CV_NEON_fcast_16S.path <- paste0(dir, "plot.CV_NEON_fcast_16S.rds")
 
 #### 16S/scc_gen/NEON_forecast_data ####
 dir <- paste0(scc_gen_16S_dir, "NEON_forecast_data/") 
 cmd <- paste0('mkdir -p ',dir)
 system(cmd)
 NEON_cps_fcast_ddirch_16S.path <- paste0(dir, "NEON_cps_fcast_ddirch_16S.rds")
+NEON_var_importance_data_ddirch_16S.path <- paste0(dir, "NEON_var_importance_data_ddirch_16S.rds")
+NEON_ddirch_var.decomp_16S.path <- paste0(dir, "NEON_ddirch_var.decomp_16S.rds")
 
-#### Moran's I analysis summary across NEON network for bacteria. ####
-NEON_16S_morans_I_data.path <- paste0(dir,'NEON_16S_morans_I_data.rds')
 
 
 #### 16S results summary filepath. #####
@@ -422,4 +419,3 @@ dir <- paste0(pecan_gen_16S_dir, "reference_data/")
 cmd <- paste0('mkdir -p ',dir)
 system(cmd)
 pH_conversion.path <- paste0(dir, "pH_conversion_data.rds")
-
