@@ -66,16 +66,24 @@ pro.d_xy.16S <- data.frame(pro.d.16S$x,pro.d.16S$y)
 pro.d_xy.16S[nrow(pro.d_xy.16S),2] <- 0
 
 #png save line.----
-png(filename=output.path,width=5,height=5,units='in',res=300)
+png(filename=output.path,width=10,height=5,units='in',res=300)
 
 #Global plot settings.----
-par(mfrow = c(1,2))
+par(mfrow = c(1,2), mar = c(4.5,4,1,1))
 limx <- c(0,1)
 limy <- c(0, 51)
 trans <- 0.2 #shading transparency.
 o.cex <- 1.3 #outer label size.
 cols <- c('purple','cyan','yellow')
-par(mfrow = c(1,1), mar = c(4.5,4,1,1))
+
+#16S plot.----
+plot(cov.d.16S,xlim = limx, ylim = limy, bty = 'n', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 1)
+polygon(cov.d.16S, col = adjustcolor(cols[1],trans))
+polygon(par.d.16S, col = adjustcolor(cols[2],trans))
+polygon(pro.d_xy.16S, col = adjustcolor(cols[3],trans), fillOddEven = F)
+mtext('Density', side = 2, line = 2.2, cex = o.cex)
+mtext('relative contribution to uncertainty', side = 1, line = 2.5, cex = o.cex)
+mtext('Bacteria', side = 3, line = -1, adj = 0.8, cex = o.cex)
 
 #ITS plot.----
 plot(cov.d.ITS,xlim = limx, ylim = limy, bty = 'n', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 1)
@@ -87,14 +95,7 @@ mtext('relative contribution to uncertainty', side = 1, line = 2.5, cex = o.cex)
 legend(x = 0.7, y = 40, legend = c('covariate','parameter','process'), 
        col ='black', pt.bg=adjustcolor(cols,trans), 
        bty = 'n', pch = 22, pt.cex = 1.5)
-
-#16S plot.----
-plot(cov.d.16S,xlim = limx, ylim = limy, bty = 'n', xlab = NA, ylab = NA, main = NA, yaxs='i', xaxs = 'i', las = 1, lwd = 1)
-polygon(cov.d.16S, col = adjustcolor(cols[1],trans))
-polygon(par.d.16S, col = adjustcolor(cols[2],trans))
-polygon(pro.d_xy.16S, col = adjustcolor(cols[3],trans), fillOddEven = F)
-mtext('Density', side = 2, line = 2.2, cex = o.cex)
-mtext('relative contribution to uncertainty', side = 1, line = 2.5, cex = o.cex)
+mtext('Fungi', side = 3, line = -1, adj = 0.8, cex = o.cex)
 
 #end plot.----
 dev.off()
