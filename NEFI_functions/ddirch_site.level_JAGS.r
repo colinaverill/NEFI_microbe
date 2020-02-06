@@ -10,6 +10,8 @@
 #' @param sample  number of sample iterations for JAGS simulation.
 #' @param n.chains number of chains for JAGS simulation.
 #' @param parallel whether or not to run JAGS chains in parallel.
+#' @param jags.path you can specify path to jags binary if for some reason its not autodetecting it.
+#' @param parallel_method method of parallelization. default is best unless you're doing something weird.
 #'
 #' @return returns a list with the fitted model, a list of species by parameter tables, and matrices of predicted, observed and residual values on the observation scale (0,1)
 #' @export
@@ -19,11 +21,19 @@ site.level_dirlichet_jags     <- function(y,
                                           x_mu, 
                                           x_sd = NA,
                                           adapt = 500, burnin = 1000, sample = 2000, n.chains = 3, 
-                                          parallel = F, silent.jags = F, parallel_method = 'rjparallel'){
+                                          parallel = F, silent.jags = F, 
+                                          parallel_method = 'rjparallel',
+                                          jags.path = NULL){
   #Load some important dependencies.
   source('NEFI_functions/crib_fun.r')
   source('NEFI_functions/sd_to_precision.r')
   source('NEFI_functions/precision_matrix_match.r')
+  
+  #check jags.path.
+  #path <- runjags::runjags.getOption("jagspath")
+  #if(!is.null(jags.path)){
+  #  path <- jags.path
+  #}
   
   #Some checks before we get started.
   y    <- as.data.frame(y)
@@ -48,12 +58,12 @@ site.level_dirlichet_jags     <- function(y,
   x_precision <- sd_to_precision(x_sd)
 
   #make sure everything is a matrix.
-  y <- as.matrix(y)
+     y <- as.matrix(y)
   x_mu <- as.matrix(x_mu)
   
   ###setup jags data object.----
   jags.data <- list(N = nrow(y), N.spp = ncol(y), #number of observations and number of species
-                    N.preds = ncol(x_mu),    #number of x predictors
+                    N.preds = ncol(x_mu),         #number of x predictors
                     x_mu = x_mu,                  #x-value mean matrix
                     x_precision = x_precision,    #x-value precision matrix
                     y = y)                        #species matrix, y
@@ -129,6 +139,7 @@ site.level_dirlichet_jags     <- function(y,
                                    sample = sample,
                                    n.chains = n.chains,
                                    method = run.method,
+                                   #jags = jags.path,
                                    silent.jags = silent.jags,
                                    monitor = c('x.m','x.mm','alpha','deviance'))
   #summarize output

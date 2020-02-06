@@ -21,6 +21,9 @@ registerDoParallel(cores=n.cores)
      output.path <- plot.CV_NEON_dmulti.ddirch_all.path
 calval_data.path <- plot.CV_NEON_cal.val_data.path
 
+#set cal-val split.----
+cal.val_split <- 0.7 #70% calibration, 30% validation.
+
 #load NEON plot-scale data.----
 #NOTE: MAP MEANS AND SDS MUST BE DIVIDED BY 1000.
 #WE SHOULD REALLY MOVE THIS TO DATA PRE-PROCESSING.
@@ -61,7 +64,6 @@ set.seed(420)
 #cal.ID <- sample(ID, round(length(ID)/ 2))
 #val.ID <- ID[!(ID %in% cal.ID)]
 #Subset by plot and site.
-cal.p <- 0.7 #how much data in calibration vs. validation.
 plotID <- rownames(y$phylum$plot.fit$mean)
 siteID <- substr(plotID,1, 4)
 plots <- data.frame(plotID, siteID)
@@ -70,7 +72,7 @@ cal <- list()
 val <- list()
 for(i in 1:length(sites)){
   sub <- plots[plots$siteID == sites[i],]
-  cal_sub <- sub[sub$plotID %in% sample(sub$plotID, round(nrow(sub) * cal.p)),]
+  cal_sub <- sub[sub$plotID %in% sample(sub$plotID, round(nrow(sub) * cal.val_split)),]
   val_sub <- sub[!(sub$plotID %in% cal_sub$plotID),]
   cal[[i]] <- cal_sub
   val[[i]] <- val_sub
@@ -134,7 +136,7 @@ cat('Begin model fitting loop...\n')
 tic()
 output.list<-
   foreach(i = 1:length(y)) %dopar% {
-    y.group <- round(y.cal[[i]]$mean * 3000) #Should perhaps draw from uncertainties, but these supplied hi/lo95 values dont account for covariance among taxa.
+    y.group <- y.cal[[i]]$mean
     fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal, seq.depth = rowSums(y.group),
                                         adapt = 200, burnin = 30000, sample = 6000, 
                                         #adapt = 200, burnin = 200, sample = 200,   #testing
