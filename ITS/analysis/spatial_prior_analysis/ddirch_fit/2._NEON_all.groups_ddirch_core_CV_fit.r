@@ -127,7 +127,7 @@ output.list<-
     y.group <- y.group + 1
     y.group <- y.group/rowSums(y.group)
     fit <- site.level_dirlichet_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal,
-                                        adapt = 200, burnin = 16000, sample = 5000, 
+                                        adapt = 200, burnin = 3000, sample = 3000, 
                                         #adapt = 200, burnin = 200, sample = 200,   #testing
                                         parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
     return(fit)                                                                     #allows nested loop to work.

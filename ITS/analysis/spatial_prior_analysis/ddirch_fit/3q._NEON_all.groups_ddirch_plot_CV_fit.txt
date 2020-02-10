@@ -1,5 +1,5 @@
 #!/bin/bash -l
-# qsun for fitting functional group models.
+# qsub for fitting NEON plot case cross validation ITS.
 ########################################
 ####      commands for scc qsub     ####
 ########################################
@@ -7,7 +7,7 @@
 #$ -l h_rt=80:00:00
 #
 #Use N processors on a single machine. Running 3 chains in parallel, but i think a 4th will make things move better.
-#$ -pe omp 36
+#$ -pe omp 28
 #
 #Give the job a name
 #$ -N plot.CV_NEON

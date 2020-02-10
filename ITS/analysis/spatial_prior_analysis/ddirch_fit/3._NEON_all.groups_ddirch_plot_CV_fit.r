@@ -9,7 +9,7 @@ rm(list = ls())
 library(data.table)
 library(doParallel)
 source('paths.r')
-source('NEFI_functions/dmulti-ddirch_site.level_JAGS.r')
+source('NEFI_functions/ddirch_site.level_JAGS.r')
 source('NEFI_functions/crib_fun.r')
 source('NEFI_functions/tic_toc.r')
 
@@ -137,10 +137,10 @@ tic()
 output.list<-
   foreach(i = 1:length(y)) %dopar% {
     y.group <- y.cal[[i]]$mean
-    fit <- site.level_multi.dirich_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal, seq.depth = rowSums(y.group),
-                                        adapt = 200, burnin = 30000, sample = 6000, 
-                                        #adapt = 200, burnin = 200, sample = 200,   #testing
-                                        parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
+    fit <- site.level_dirlichet_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal,
+                                     adapt = 200, burnin = 30000, sample = 6000, 
+                                     #adapt = 200, burnin = 200, sample = 200)#,   #testing
+                                     parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
     return(fit)                                                                     #allows nested loop to work.
   }
 cat('Model fitting loop complete! ')

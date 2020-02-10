@@ -3,8 +3,8 @@
 ########################################
 ####      commands for scc qsub     ####
 ########################################
-#Specfiy hard time limit for the job.
-#$ -l h_rt=80:00:00
+#Specfiy hard time limit for the job. This one needs a lot of time.
+#$ -l h_rt=160:00:00
 #
 #Use N processors on a single machine. Running 3 chains in parallel, but i think a 4th will make things move better.
 #$ -pe omp 36
