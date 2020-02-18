@@ -18,7 +18,9 @@ source('NEFI_functions/precision_matrix_match.r')
 ddirch_forecast <- function(mod, cov_mu, names, cov_sd = NA, n.samp = 1000,
                             zero_parameter_uncertainty = F,
                             zero_covariate_uncertainty = F,
-                            zero_process_uncertainty   = F){
+                            zero_process_uncertainty   = F,
+                            map.transform = F, relEM.transform = F
+                            ){
   #run some tests.----
   if(is.list(mod) == F){
     stop("Your model object isn't a list. It really needs to be.")
@@ -87,10 +89,14 @@ ddirch_forecast <- function(mod, cov_mu, names, cov_sd = NA, n.samp = 1000,
       for(k in 1:ncol(covs)){now.cov[,k] <- rnorm(nrow(covs),covs[,k], cov.sd[,k])}
       colnames(now.cov) <- preds
       now.cov <- data.frame(now.cov)
-      #log transform map values if this is one of your covariates, put covariates back in matrix form.
       #anti-logit relEM, multiply by 100 if this is one of your covariates.
-      if('relEM' %in% colnames(now.cov)){now.cov$relEM <- boot::inv.logit(now.cov$relEM) * 100}
-      if('map'   %in% colnames(now.cov)){now.cov$map   <- log(now.cov$map)}
+      if(relEM.transform == T){
+        if('relEM' %in% colnames(now.cov)){now.cov$relEM <- boot::inv.logit(now.cov$relEM) * 100}
+      }
+      #log transform map values if this is one of your covariates, put covariates back in matrix form.
+      if(map.transform == T){
+        if('map'   %in% colnames(now.cov)){now.cov$map   <- log(now.cov$map)}
+      }
       now.cov <- as.matrix(now.cov)
     }
     
@@ -101,8 +107,12 @@ ddirch_forecast <- function(mod, cov_mu, names, cov_sd = NA, n.samp = 1000,
       now.cov <- data.frame(now.cov)
       #log transform map values if this is one of your covariates, put covariates back in matrix form.
       #anti-logit relEM, multiply by 100 if this is one of your covariates.
-      if('relEM' %in% colnames(now.cov)){now.cov$relEM <- boot::inv.logit(now.cov$relEM) * 100}
-      if('map'   %in% colnames(now.cov)){now.cov$map   <- log(now.cov$map)}
+      if(relEM.transform == T){
+        if('relEM' %in% colnames(now.cov)){now.cov$relEM <- boot::inv.logit(now.cov$relEM) * 100}
+      }
+      if(map.transform == T){
+        if('map'   %in% colnames(now.cov)){now.cov$map   <- log(now.cov$map)}
+      }
       now.cov <- as.matrix(now.cov)
     }
     
@@ -136,4 +146,5 @@ ddirch_forecast <- function(mod, cov_mu, names, cov_sd = NA, n.samp = 1000,
   
   #return output.----
   return(output)
+  
 } #end function.----

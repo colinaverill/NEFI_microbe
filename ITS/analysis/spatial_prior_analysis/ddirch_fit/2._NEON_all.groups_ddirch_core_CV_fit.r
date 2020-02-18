@@ -60,6 +60,9 @@ names(core.sd)[names(core.sd)=="b.relEM"] <- "relEM"
 core.preds$map <- core.preds$map / 1000
 core.sd   $map <- core.sd   $map / 1000
 
+#Get relEM back to 0-100.
+core.preds$relEM <- boot::inv.logit(core.preds$relEM)
+
 #Split into calibration / validation data sets.----
 set.seed(420)
 ID <- rownames(y$phylum$abundances)
@@ -87,6 +90,36 @@ for(i in 1:length(y)){
 }
 names(y.cal) <- names(y)
 names(y.val) <- names(y)
+
+#Drop groups that just aren't observed frequently enough (>30% of samples) to fit a decent model (mostly zeros).
+freq.filter <- list()
+for(i in 1:length(y.cal)){
+  check <- y.cal[[i]]$rel.abundances
+  abundance.check <- list()
+  for(j in 1:ncol(check)){
+    z <- check[,j]
+    abundance.check[[j]] <-  sum(z > 0.01)/ length(z)
+  }
+  abundance.check <- unlist(abundance.check)
+  names(abundance.check) <- colnames(check)
+  abundance.check <- abundance.check[abundance.check >= 0.3]
+  freq.filter[[i]] <- abundance.check
+}
+names(freq.filter) <- names(y.cal)
+
+#update your lists.
+for(i in 1:length(y.cal)){
+  z.cal <- y.cal[[i]]$rel.abundances
+  z.val <- y.val[[i]]$rel.abundances
+  z.cal <- z.cal[,colnames(z.cal) %in% names(freq.filter[[i]])]
+  z.val <- z.val[,colnames(z.val) %in% names(freq.filter[[i]])]
+  z.cal[,1] <- 1 - rowSums(z.cal[,2:ncol(z.cal)])
+  z.val[,1] <- 1 - rowSums(z.val[,2:ncol(z.val)])
+  if(mean(rowSums(z.cal)) != 1){cat('Warning: rowSums of calibration data do not sum to 1.')}
+  if(mean(rowSums(z.val)) != 1){cat('Warning: rowSums of calibration data do not sum to 1.')}
+  y.cal[[i]]$rel.abundances <- z.cal
+  y.val[[i]]$rel.abundances <- z.val
+}
 
 #split x means and sd's.
 x_mu.cal <- core.preds[core.preds$sampleID %in% gsub('-GEN','',cal.ID),]
@@ -126,7 +159,7 @@ output.list<-
     y.group <- y.cal[[i]]$abundances
     y.group <- y.group + 1
     y.group <- y.group/rowSums(y.group)
-    fit <- site.level_dirlichet_jags(y=y.group,x_mu=x_mu.cal, x_sd=x_sd.cal,
+    fit <- site.level_dirlichet_jags(y=y.group,x_mu=x_mu.cal, #x_sd=x_sd.cal,
                                         adapt = 200, burnin = 3000, sample = 3000, 
                                         #adapt = 200, burnin = 200, sample = 200,   #testing
                                         parallel = T, parallel_method = 'parallel') #setting parallel rather than rjparallel. 
