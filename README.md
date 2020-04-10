@@ -16,7 +16,4 @@ We love quantifying and propogating uncertainty. Many spatial products do not co
 All custom functions used in this project are stored here.
 
 *figures*
-Just a place to save figures to. If these become too large we will have to move this directory to the data directory.
-
-*testing_development*
-Along the way many testing and intermediate scripts are generated that aren't necessary for the final repo. Some of these are still useful as examples and are retained in this folder.
+Just a place to save figures to. This directory is ignored in git tracking.

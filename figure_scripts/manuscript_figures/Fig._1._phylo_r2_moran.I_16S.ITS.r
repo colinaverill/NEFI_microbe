@@ -15,29 +15,38 @@ moran.16S <- readRDS(NEON_16S_morans_I_data.path)
 
 #1. Workup ITS calibration/validation rsq.1 values across phylo/function scales.----
 #calibration rsq.1 values by functional/taxonomic group.
-cal.check.ITS <- list()
-cal.mu.ITS    <- list()
+cal.check.ITS   <- list()
+cal.mu.ITS      <- list()
+cal.mu.ITS.bias <- list()
 for(i in 1:length(d.ITS$calibration$cal.stat)){
   check <- d.ITS$calibration$cal.stat[[i]]
   check$rsq.1 <- ifelse(check$rsq.1 < 0, 0, check$rsq.1)
-  cal.check.ITS[[i]] <- check
-  cal.mu.ITS   [[i]] <- mean(check$rsq.1)
+  cal.check.ITS  [[i]] <- check
+  cal.mu.ITS     [[i]] <- mean(check$rsq.1)
+  cal.mu.ITS.bias[[i]] <- mean(check$rsq)
 }
-cal.mu.ITS <- unlist(cal.mu.ITS)
-names(cal.mu.ITS) <- names(d.ITS$calibration$cal.stat)
+cal.mu.ITS      <- unlist(cal.mu.ITS)
+cal.mu.ITS.bias <- unlist(cal.mu.ITS.bias)
+names(cal.mu.ITS     ) <- names(d.ITS$calibration$cal.stat)
+names(cal.mu.ITS.bias) <- names(d.ITS$calibration$cal.stat)
+
 
 #validation rsq.1 values by functional/taxonomic group.
-val.check.ITS <- list()
-val.mu.ITS    <- list()
+val.check.ITS   <- list()
+val.mu.ITS      <- list()
+val.mu.ITS.bias <- list()
 for(i in 1:length(d.ITS$validation$val.stat$site.stat)){
   check <- d.ITS$validation$val.stat$site.stat[[i]]
   check <- check[check$name %in% cal.check.ITS[[i]]$name,]
   check$rsq.1 <- ifelse(check$rsq.1 < 0, 0, check$rsq.1)
-  val.check.ITS[[i]] <- check
-  val.mu.ITS   [[i]] <- mean(check$rsq.1)
+  val.check.ITS  [[i]] <- check
+  val.mu.ITS     [[i]] <- mean(check$rsq.1)
+  val.mu.ITS.bias[[i]] <- mean(check$rsq)
 }
-val.mu.ITS <- unlist(val.mu.ITS)
-names(val.mu.ITS) <- names(d.ITS$validation$val.stat$site.stat)
+val.mu.ITS      <- unlist(val.mu.ITS)
+val.mu.ITS.bias <- unlist(val.mu.ITS.bias)
+names(val.mu.ITS     ) <- names(d.ITS$validation$val.stat$site.stat)
+names(val.mu.ITS.bias) <- names(d.ITS$validation$val.stat$site.stat)
 
 #2. Workup 16S calibration/validation rsq.1 values across phylo/function scales.----
 #get calibration rsq.1 values by group.
@@ -53,17 +62,21 @@ cal.mu.16S <- unlist(cal.mu.16S)
 names(cal.mu.16S) <- names(d.16S$calibration$cal.stat)
 
 #get validation rsq.1 values by group.
-val.check.16S <- list()
-val.mu.16S    <- list()
+val.check.16S   <- list()
+val.mu.16S      <- list()
+val.mu.16S.bias <- list()
 for(i in 1:length(d.16S$validation$val.stat$site.stat)){
   check <- d.16S$validation$val.stat$site.stat[[i]]
   check <- check[check$name %in% cal.check.16S[[i]]$name,]
   check$rsq.1 <- ifelse(check$rsq.1 < 0, 0, check$rsq.1)
-  val.check.16S[[i]] <- check
-  val.mu.16S   [[i]] <- mean(check$rsq.1)
+  val.check.16S  [[i]] <- check
+  val.mu.16S     [[i]] <- mean(check$rsq.1)
+  val.mu.16S.bias[[i]] <- mean(check$rsq)
 }
-val.mu.16S <- unlist(val.mu.16S)
-names(val.mu.16S) <- names(d.16S$validation$val.stat$site.stat)
+val.mu.16S      <- unlist(val.mu.16S)
+val.mu.16S.bias <- unlist(val.mu.16S.bias)
+names(val.mu.16S     ) <- names(d.16S$validation$val.stat$site.stat)
+names(val.mu.16S.bias) <- names(d.16S$validation$val.stat$site.stat)
 
 #3. Workup ITS validation rsq.1 values across function/phylo by spatial scales.----
 scale.list <- list()
@@ -106,6 +119,9 @@ lines(x, cal.mu.16S, lty = 2)
 #Validation.
 lines(x, val.mu.16S, lty = 2)
 points(val.mu.16S ~ x, cex = 2.5, pch = 16, col = 'gray')
+#Validation "bias-corrected".
+#lines(x, val.mu.16S.bias, lty = 2)
+#points(val.mu.16S.bias ~ x, cex = 2.5, pch = 16, col = 'purple')
 mtext(expression(paste("Site-Level R"^"2")), side = 2, line = 2.7, cex = y.cex)
 axis(1, labels = F)
 text(x=x+0.05, y = limy[1] - limy[2]*0.1, labels= names(cal.mu.16S), srt=45, adj=1, xpd=TRUE, cex = o.cex)
@@ -134,11 +150,16 @@ mtext('(b)', side = 3, adj = 0.98, line = -2)
 #Calibration and Validation rsq ~ function/phylo scale ITS.----
 x <- 1:length(cal.mu.ITS)
 limy <- c(-0.03,max(cal.mu.ITS)*1.1)
+#calibration points.
 plot(cal.mu.ITS ~ x, cex = 2.5, ylim = limy, pch = 16, ylab = NA, xlab = NA, bty='l', xaxt = 'n', yaxs='i', las = 1, lwd = 0)
 #arrows(x, lev.mu - lev.se, x1 = x, y1 = lev.mu + lev.se, length=0.00, angle=90, code=3, col = 'black')
 lines(x, cal.mu.ITS, lty = 2)
+#validation points.
 lines(x, val.mu.ITS, lty = 2)
 points(val.mu.ITS ~ x, cex = 2.5, pch = 16, col = 'gray')
+#validation "bias-corrected" points.
+#lines(x, val.mu.ITS.bias, lty = 2) 
+#points(val.mu.ITS.bias ~ x, cex = 2.5, pch = 16, col = 'purple')
 mtext(expression(paste("Site-Level R"^"2")), side = 2, line = 2.7, cex = y.cex)
 axis(1, labels = F)
 text(x=x+0.05, y = limy[1] - limy[2]*0.1, labels= names(cal.mu.ITS), srt=45, adj=1, xpd=TRUE, cex = o.cex)
