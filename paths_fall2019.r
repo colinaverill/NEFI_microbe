@@ -398,10 +398,10 @@ plot.CV_NEON_fcast_16S.path <- paste0(dir, "plot.CV_NEON_fcast_16S.rds")
 dir <- paste0(scc_gen_16S_dir, "NEON_forecast_data/") 
 cmd <- paste0('mkdir -p ',dir)
 system(cmd)
-NEON_cps_fcast_ddirch_16S.path <- paste0(dir, "NEON_cps_fcast_ddirch_16S.rds")
+          NEON_cps_fcast_ddirch_16S.path <- paste0(dir, "NEON_cps_fcast_ddirch_16S.rds")
 NEON_var_importance_data_ddirch_16S.path <- paste0(dir, "NEON_var_importance_data_ddirch_16S.rds")
-NEON_ddirch_var.decomp_16S.path <- paste0(dir, "NEON_ddirch_var.decomp_16S.rds")
-
+         NEON_ddirch_var.decomp_16S.path <- paste0(dir, "NEON_ddirch_var.decomp_16S.rds")
+             NEON_16S_morans_I_data.path <- paste0(dir, 'NEON_16S_morans_I_data.rds')
 
 
 #### 16S results summary filepath. #####
