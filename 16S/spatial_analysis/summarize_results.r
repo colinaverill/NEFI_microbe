@@ -104,6 +104,8 @@ names(calibration) <- c('cal.stat','cal.stat.predictable','cal.stat.sum','cal.st
 val.truth <- readRDS(NEON_phylo_fg_plot.site_obs_16S.path)
 val.cast  <- readRDS(NEON_cps_fcast_ddirch_16S.path)
 names(val.cast) <- names(val.truth)
+map.16S <- readRDS(core_obs.path)
+
 
 #get validation stats @ core, plot site scale.----
 core.stat <- list()
@@ -117,10 +119,19 @@ for(i in 1:length(val.cast)){
   #core.level----
   y <- val.truth[[i]]$core.fit
   x <- fcast$core.fit$mean
+  
+  #Fix names.
+  map.name <- map.16S[,c('geneticSampleID','deprecatedVialID')]
+  map.name <- map.name[map.name$deprecatedVialID %in% rownames(y),]
+  y <- y[rownames(y) %in% map.name$deprecatedVialID,,drop = F]
+  map.name <- map.name[order(match(map.name$deprecatedVialID, rownames(y))),]
+  map.name$geneticSampleID <- gsub('-GEN','',map.name$geneticSampleID)
+  rownames(y) <- map.name$geneticSampleID
+  
   #make sure row and column orders match.
-  rownames(y) <- gsub('-GEN','' , rownames(y))
-  rownames(x) <- gsub(   '-','.', rownames(x))
-  rownames(x) <- gsub(   '_','.', rownames(x))
+  #rownames(y) <- gsub('-GEN','' , rownames(y))
+  #rownames(x) <- gsub(   '-','.', rownames(x))
+  #rownames(x) <- gsub(   '_','.', rownames(x))
   y <- y[rownames(y) %in% rownames(x),]
   x <- x[rownames(x) %in% rownames(y),]
   y <- y[,colnames(y) %in% colnames(x)]
