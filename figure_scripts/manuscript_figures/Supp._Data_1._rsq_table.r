@@ -72,7 +72,7 @@ out <- out[,c('kingdom','grouping','name',
               'rsq_raw_core','rsq_1.1_core',
               'rsq_raw_plot','rsq_1.1_plot',
               'rsq_raw_site','rsq_1.1_site')]
-out <- out[order(out$rsq_raw_site, decreasing = T),]
+out <- out[order(out$rsq_1.1_site, decreasing = T),]
 
 #save.
 write.csv(out, output.path)

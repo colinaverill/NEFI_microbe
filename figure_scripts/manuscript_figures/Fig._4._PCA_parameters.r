@@ -9,7 +9,7 @@ library(RColorBrewer)
 library(gridExtra)
 
 #set output path.----
-output.path <- 'figures/Fig._3._parameter_PCA.png'
+output.path <- 'figures/Fig._4._parameter_PCA.png'
 
 #load raw data and predictors.----
 pl.ITS <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)

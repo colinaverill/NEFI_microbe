@@ -5,7 +5,7 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'figures/Fig._1._phylo.moran_space.png'
+output.path <- 'figures/Fig._3._phylo.moran_space.png'
 
 #Load calibration/validation rsq.1 data, Moran's I data.----
 d.ITS <- readRDS(NEON_dmilti.ddirch_analysis_summary.path)
@@ -93,6 +93,21 @@ for(i in 1:length(d.ITS$validation$val.stat$core.stat)){
 scale.list <- (do.call(rbind, scale.list))
 rownames(scale.list) <- names(d.ITS$validation$val.stat$core.stat)
 colnames(scale.list) <- c('core','plot','site')
+#4. Workup 16S validation rsq.1 values across function/phylo by spatial scales.----
+scale.list.16S <- list()
+for(i in 1:length(d.16S$validation$val.stat$core.stat)){
+  core <- d.16S$validation$val.stat$core.stat[[i]]$rsq.1
+  plot <- d.16S$validation$val.stat$plot.stat[[i]]$rsq.1
+  site <- d.16S$validation$val.stat$site.stat[[i]]$rsq.1
+  core <- ifelse(core < 0, 0, core)
+  plot <- ifelse(plot < 0, 0, plot)
+  site <- ifelse(site < 0, 0, site)
+  to.return <- c(mean(core),mean(plot),mean(site))
+  scale.list.16S[[i]] <- to.return
+}
+scale.list.16S <- (do.call(rbind, scale.list.16S))
+rownames(scale.list.16S) <- names(d.16S$validation$val.stat$core.stat)
+colnames(scale.list.16S) <- c('core','plot','site')
 
 
 #Global plot settings.----
@@ -109,44 +124,6 @@ o.cex <- 1.2 #outer label size.
 y.cex <- 1.0 #y-axis label size.
 x.cex <- 1.2 #x-axis label size.
 cols <- c('purple','cyan','yellow')
-#Calibration and Validation rsq ~ function/phylo scale 16S.----
-x <- 1:length(cal.mu.16S)
-limy <- c(-0.03,max(cal.mu.16S)*1.1)
-#Calibration.
-plot(cal.mu.16S ~ x, cex = 2.5, ylim = limy, pch = 16, ylab = NA, xlab = NA, bty='l', xaxt = 'n', yaxs='i', las = 1, lwd = 0)
-#arrows(x, lev.mu - lev.se, x1 = x, y1 = lev.mu + lev.se, length=0.00, angle=90, code=3, col = 'black')
-lines(x, cal.mu.16S, lty = 2)
-#Validation.
-lines(x, val.mu.16S, lty = 2)
-points(val.mu.16S ~ x, cex = 2.5, pch = 16, col = 'gray')
-#Validation "bias-corrected".
-#lines(x, val.mu.16S.bias, lty = 2)
-#points(val.mu.16S.bias ~ x, cex = 2.5, pch = 16, col = 'purple')
-mtext(expression(paste("Site-Level R"^"2")), side = 2, line = 2.7, cex = y.cex)
-axis(1, labels = F)
-text(x=x+0.05, y = limy[1] - limy[2]*0.1, labels= names(cal.mu.16S), srt=45, adj=1, xpd=TRUE, cex = o.cex)
-#legend
-#legend(x = 1, y = 0.4, legend = c('calibration','validation'), col =c('black','gray'), bty = 'n', pch = 16, pt.cex = 2.5, cex = 1.2)
-mtext('(a)', side = 3, adj = 0.98, line = -2)
-mtext('Bacteria', side = 3, line = 0.5, cex = 1.5, adj = 0)
-#Bacterial Moran's I.----
-limy <- c(0, max(moran.16S$mu + moran.16S$se))
-plot(mu ~ x, data = moran.16S, cex = 2, pch = 16, ylim = limy,
-     ylab = NA, xlab = NA, xaxt = 'n', bty = 'l', yaxs='i', las = 1)
-#error bars.
-mu <- moran.16S$mu
-x <- moran.16S$x
-upr <- mu + moran.16S$se
-lwr <- mu - moran.16S$se
-arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
-#x-axis.
-x.lab <- rownames(moran.16S)
-x.lab[x.lab == 'fg'] <- 'functional'
-axis(1, at=moran.16S$x, labels= NA, cex = 1, srt = 45)
-text(x= moran.16S$x + .05, y = limy[1] - limy[2]*0.13, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = o.cex)
-mtext("Moran's I", side = 2, line = 2.5, cex = y.cex)
-mtext('(b)', side = 3, adj = 0.98, line = -2)
-
 #Calibration and Validation rsq ~ function/phylo scale ITS.----
 x <- 1:length(cal.mu.ITS)
 limy <- c(-0.03,max(cal.mu.ITS)*1.1)
@@ -160,12 +137,12 @@ points(val.mu.ITS ~ x, cex = 2.5, pch = 16, col = 'gray')
 #validation "bias-corrected" points.
 #lines(x, val.mu.ITS.bias, lty = 2) 
 #points(val.mu.ITS.bias ~ x, cex = 2.5, pch = 16, col = 'purple')
-mtext(expression(paste("Site-Level R"^"2")), side = 2, line = 2.7, cex = y.cex)
+mtext(expression(paste("Site-Level R"^"2")[1:1]), side = 2, line = 2.7, cex = y.cex)
 axis(1, labels = F)
 text(x=x+0.05, y = limy[1] - limy[2]*0.1, labels= names(cal.mu.ITS), srt=45, adj=1, xpd=TRUE, cex = o.cex)
 #legend
 legend(x = 0.8, y = 0.06, legend = c('calibration','validation'), col =c('black','gray'), bty = 'n', pch = 16, pt.cex = 2.5, cex = 1.2)
-mtext('(c)', side = 3, adj = 0.98, line = -2)
+mtext('(a)', side = 3, adj = 0.98, line = -2)
 mtext('Fungi', side = 3, line = 0.5, cex = 1.5, adj = 0)
 
 #Fungal Moran's I.----
@@ -185,7 +162,45 @@ axis(1, at=moran.ITS$x, labels= NA, cex = 1, srt = 45)
 #text(x= moran.ITS$x + .12, y = -0.06, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = 1)
 text(x= moran.ITS$x + .05, y = limy[1] - limy[2]*0.13, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = o.cex)
 mtext("Moran's I", side = 2, line = 2.5, cex = y.cex)
+mtext('(b)', side = 3, adj = 0.98, line = -2)
+
+#Calibration and Validation rsq ~ function/phylo scale 16S.----
+x <- 1:length(cal.mu.16S)
+limy <- c(-0.03,max(cal.mu.16S)*1.1)
+#Calibration.
+plot(cal.mu.16S ~ x, cex = 2.5, ylim = limy, pch = 16, ylab = NA, xlab = NA, bty='l', xaxt = 'n', yaxs='i', las = 1, lwd = 0)
+#arrows(x, lev.mu - lev.se, x1 = x, y1 = lev.mu + lev.se, length=0.00, angle=90, code=3, col = 'black')
+lines(x, cal.mu.16S, lty = 2)
+#Validation.
+lines(x, val.mu.16S, lty = 2)
+points(val.mu.16S ~ x, cex = 2.5, pch = 16, col = 'gray')
+#Validation "bias-corrected".
+#lines(x, val.mu.16S.bias, lty = 2)
+#points(val.mu.16S.bias ~ x, cex = 2.5, pch = 16, col = 'purple')
+mtext(expression(paste("Site-Level R"^"2")[1:1]), side = 2, line = 2.7, cex = y.cex)
+axis(1, labels = F)
+text(x=x+0.05, y = limy[1] - limy[2]*0.1, labels= names(cal.mu.16S), srt=45, adj=1, xpd=TRUE, cex = o.cex)
+#legend
+#legend(x = 1, y = 0.4, legend = c('calibration','validation'), col =c('black','gray'), bty = 'n', pch = 16, pt.cex = 2.5, cex = 1.2)
 mtext('(d)', side = 3, adj = 0.98, line = -2)
+mtext('Bacteria', side = 3, line = 0.5, cex = 1.5, adj = 0)
+#Bacterial Moran's I.----
+limy <- c(0, max(moran.16S$mu + moran.16S$se))
+plot(mu ~ x, data = moran.16S, cex = 2, pch = 16, ylim = limy,
+     ylab = NA, xlab = NA, xaxt = 'n', bty = 'l', yaxs='i', las = 1)
+#error bars.
+mu <- moran.16S$mu
+x <- moran.16S$x
+upr <- mu + moran.16S$se
+lwr <- mu - moran.16S$se
+arrows(c(x), lwr, c(x), upr, length=0.00, angle=90, code=3, col = 'black', lwd = 2)
+#x-axis.
+x.lab <- rownames(moran.16S)
+x.lab[x.lab == 'fg'] <- 'functional'
+axis(1, at=moran.16S$x, labels= NA, cex = 1, srt = 45)
+text(x= moran.16S$x + .05, y = limy[1] - limy[2]*0.13, labels= x.lab, srt=45, adj=1, xpd=TRUE, cex = o.cex)
+mtext("Moran's I", side = 2, line = 2.5, cex = y.cex)
+mtext('(e)', side = 3, adj = 0.98, line = -2)
 
 #Fungal validation rsq.1 across spatial scales.----
 cols <- brewer.pal(nrow(scale.list) - 1,'Spectral')
@@ -203,10 +218,10 @@ for(i in 2:nrow(scale.list)){
 axis(1, at = c(1,2,3), labels = F)
 lab <- c('core','plot','site')
 text(x=x+0.05, y = limy[1] - limy[2]*0.1, labels= lab, srt=45, adj=1, xpd=TRUE, cex = o.cex)
-mtext(expression(paste("Fungal Validation R"^"2")), side = 2, line = 2.5, cex = y.cex)
+mtext(expression(paste("Fungal Validation R"^"2")[1:1]), side = 2, line = 2.5, cex = y.cex)
 leg.lab <- rownames(scale.list)
 legend('topleft',leg.lab, pch = 21, col = 'black', pt.bg = cols, ncol = 1, bty= 'n')
-mtext('(e)', side = 3, adj = 0.98, line = -2)
+mtext('(c)', side = 3, adj = 0.98, line = -2)
 
 #end plot.----
 dev.off()
