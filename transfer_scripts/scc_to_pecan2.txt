@@ -1,2 +1,0 @@
-#transferring scc data back to pecan. This is bioinformatics output and JAGS model output.
-scp -r caverill@scc1.bu.edu:/projectnb/talbot-lab-data/NEFI_data/ITS/scc_gen/. /fs/data3/caverill/NEFI_data/ITS/scc_gen/
