@@ -1,0 +1,42 @@
+#!/bin/bash -l
+#This script is for assigning fungal taxonomy using RDP via dada2.
+#
+########################################
+####      commands for scc qsub     ####
+########################################
+#Specfiy hard time limit for the job. 100 hours is plenty.
+#$ -l h_rt=100:00:00
+#run on a few processors - taxonomy assignment can be done in parallel.
+#$ -pe omp 16         #assign in parallel.
+#$ -l mem_per_core=8G #big memory.
+#
+#Give the job a name
+#$ -N neon_RDP
+#
+# Merge stderr into the stdout file, to reduce clutter
+#$ -j y
+#$ -o $JOB_NAME.log
+#
+#
+# Have the system send mail when the job begins and when the job is aborted or ended
+#$ -m ae
+#
+# end of qsub arguments
+#
+########################################
+#### begin commands to run R script ####
+########################################
+#
+#
+# load necessary modules 
+module load R/3.4.0
+#
+#move to directory that contains the project
+cd /projectnb/talbot-lab-data/caverill/NEFI_microbe
+#
+# in the directory specified above, invoke this function:
+Rscript ITS/data_construction/NEON_ITS/4._sequence_processing_raw_fastq/3._assign_taxonomy_rdp.r
+#
+#
+#End of commands.
+#

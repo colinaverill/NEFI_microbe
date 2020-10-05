@@ -1,0 +1,41 @@
+#!/bin/bash -l
+#
+########################################
+####      commands for scc qsub     ####
+########################################
+#Specfiy hard time limit for the job. 100 hours is plenty.
+#$ -l h_rt=100:00:00
+#run on a few processors (dada2 RDP classifier can be run in parallel)
+#$ -pe omp 18
+#
+#Give the job a name
+#$ -N cps_NEON_fungal_groups
+#
+# Merge stderr into the stdout file, to reduce clutter
+#$ -j y
+#$ -o $JOB_NAME.log
+#
+#
+# Have the system send mail when the job begins and when the job is aborted or ended
+#$ -m ae
+#
+# end of qsub arguments
+#
+########################################
+#### begin commands to run R script ####
+########################################
+#
+#
+# load necessary modules 
+module load R/3.4.0
+module load jags
+#
+#move to directory that contains the project
+cd /projectnb/talbot-lab-data/caverill/NEFI_microbe
+#
+# in the directory specified above, invoke this function:
+Rscript ITS/data_construction/NEON_ITS/4._sequence_processing_raw_fastq/7._hierarch_group_means_cps.r
+#
+#
+#End of commands.
+#

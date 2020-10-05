@@ -1,0 +1,41 @@
+#!/bin/bash -l
+#This script is for subsetting the ESV table with requires a lot of RAM. 
+#
+########################################
+####      commands for scc qsub     ####
+########################################
+#Specfiy hard time limit for the job. 80 hours is plenty.
+#$ -l h_rt=80:00:00
+#
+#Request a machine with a ton of memory, and a ton of slots on that machine so you can use it.
+#$ -l mem_total=125G -pe omp 16
+#
+#Give the job a name
+#$ -N NEON_RDP
+#
+# Merge stderr into the stdout file, to reduce clutter
+#$ -j y
+#$ -o $JOB_NAME.log
+#
+#
+# Have the system send mail when the job begins and when the job is aborted or ended
+#$ -m ae
+#
+# end of qsub arguments
+#
+########################################
+#### begin commands to run R script ####
+########################################
+#
+#
+# load necessary modules 
+module load R/3.4.0
+module load python/2.7.7
+#
+#
+# in the directory specified above, invoke this function:
+Rscript 16S/data_construction/NEON_16S/3._16S_sequence_processing/3._assign_taxonomy.r
+#
+#
+#End of commands.
+#
