@@ -145,6 +145,7 @@ for(i in 1:length(namey)){
   mtext(rsq.1.lab, side = 3, line = -4.2, adj = 0.03)
   #uppercase first letter.
   laby <- paste0(toupper(substr(namey[i], 1, 1)), substr(namey[i], 2, nchar(namey[i])))
+  if(laby == 'Oligotroph'){laby <- 'Oligotrophic Bacteria'}
   mtext(laby, side = 2, line = 2.5, cex = 1.5)
   #add confidence interval.
   polygon(c(x, rev(x)),c(pi_0.975, rev(pi_0.025)), col=adjustcolor('green', trans), lty=0) #predictive interval.
