@@ -6,7 +6,7 @@ library(dplyr)
 source("paths_fall2019.r")
 
 #set figure output path.----
-output.path <- 'figures/Supp._Fig._2._acidobacteria_pH_bias.png'
+output.path <- 'figures/Supp._Fig._4._acidobacteria_pH_bias.png'
 
 
 #### PREP NEON DATA #### -----------------------------------
@@ -56,10 +56,10 @@ cal.df.plot <- cal.df[,c("acidobacteria","pH","sequence_region","study_id")]
 colnames(cal.df.plot)[4] <- "dataset"
 
 #### CREATE FIGURES #### -----------------------------------
-#png save line.
+#png save line.----
 png(filename=output.path,width=11,height=5,units='in',res=300)
 
-#global plot settings.
+#global plot settings.----
 df.plot <- rbind(cal.df.plot, neon.df.plot)
 palette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -88,5 +88,5 @@ grid.arrange(cal.val.fig, top6.fig, ncol=2)
 grid.text('a)', x=unit(.03, 'npc'), y=unit(.95, 'npc'), gp = gpar(fontsize=16))
 grid.text('b)', x=unit(.53, 'npc'), y=unit(.95, 'npc'), gp = gpar(fontsize=16))
 
-#end plot.
+#end plot.----
 dev.off()

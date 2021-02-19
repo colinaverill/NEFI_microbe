@@ -36,7 +36,7 @@ val.mu.ITS <- unlist(val.mu.ITS)
 names(val.mu.ITS) <- names(d.ITS$validation$val.stat$site.stat)
 
 #2. Workup 16S calibration/validation coef. of variation values across phylo/function scales.----
-#get calibration rsq.1 values by group.
+#get calibration CV values by group.
 cal.check.16S <- list()
 cal.mu.16S <- list()
 for(i in 1:length(d.16S$calibration$cal.stat)){
@@ -76,8 +76,11 @@ rownames(scale.list) <- names(d.ITS$validation$val.stat$core.stat)
 colnames(scale.list) <- c('core','plot','site')
 
 
-#Global plot settings.----
+
+#png save line.----
 png(filename = output.path, width = 8, height = 5, units = 'in', res = 300)
+
+#Global plot settings.----
 par(mfrow = c(1,2), mar = c(5,4,2,1), oma = c(1,1,1,1))
 limx <- c(0,1)
 limy <- c(0, 5.1)

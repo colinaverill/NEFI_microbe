@@ -5,7 +5,7 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'figures/Fig._1._r2_spatial_scale.png'
+output.path <- 'figures/Fig._3._r2_spatial_scale.png'
 
 #load data, work up means and standard errors.----
 #requires the supplement file.
