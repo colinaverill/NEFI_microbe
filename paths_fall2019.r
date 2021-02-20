@@ -385,6 +385,9 @@ NEON_sampling_effort_analysis_plot.level_16S.path <- paste0(dir, "NEON_sampling_
 prior_delgado_ddirch_16S.path <- paste0(dir, "prior_delgado_ddirch_16S.rds")
 prior_delgado_ddirch_16S_with_relEM.path <- paste0(dir, "prior_delgado_ddirch_16S_with_relEM.rds")
 
+#Comparing parameters to in/out of sample r2.	#### 16S/scc_gen/JAGS_output/cross_val: cross-validation calibration/forecasts at NEON ####
+effect.size_r2_correlation_data_16S.path <- paste0(dir,'effect.size_r2_correlation_data_16S.rds')
+
 #### 16S/scc_gen/JAGS_output/cross_val: cross-validation calibration/forecasts at NEON ####
 dir <- paste0(scc_gen_16S_dir, "JAGS_output/cross_val/") 
 cmd <- paste0('mkdir -p ',dir)
