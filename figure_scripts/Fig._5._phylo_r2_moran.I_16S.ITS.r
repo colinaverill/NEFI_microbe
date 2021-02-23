@@ -120,7 +120,7 @@ pdf(file = output.path, width = 7.087, height = 5)
 m <- rbind(c(1,2,5), c(3,4,5))
 layout(m)
 layout.show(5)
-par(mar = c(5,4,2,1), oma = c(1,1,1,1))
+par(mar = c(5,4,2,1), oma = c(1.05,1,1,1))
 limx <- c(0,1)
 limy <- c(0, 5.1)
 trans <- 0.2 #shading transparency.
