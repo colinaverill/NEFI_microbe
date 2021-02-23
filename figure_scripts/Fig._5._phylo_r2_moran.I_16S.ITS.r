@@ -5,7 +5,8 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'figures/Fig._5._phylo.moran_space.png'
+output.path <- 'figures/Fig._5._phylo.moran_space.pdf'
+#output.path <- 'figures/test.pdf'
 
 #Load calibration/validation rsq.1 data, Moran's I data.----
 d.ITS <- readRDS(NEON_dmilti.ddirch_analysis_summary.path)
@@ -110,8 +111,11 @@ rownames(scale.list.16S) <- names(d.16S$validation$val.stat$core.stat)
 colnames(scale.list.16S) <- c('core','plot','site')
 
 
+#png/pdf save line.----
+#png(filename = output.path, width = 8, height = 5, units = 'in', res = 300)
+pdf(file = output.path, width = 7.087, height = 5)
+
 #Global plot settings.----
-png(filename = output.path, width = 8, height = 5, units = 'in', res = 300)
 #par(mfrow = c(2,2), mar = c(5,4,2,1), oma = c(1,1,1,1))
 m <- rbind(c(1,2,5), c(3,4,5))
 layout(m)

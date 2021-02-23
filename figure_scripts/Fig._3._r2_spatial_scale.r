@@ -5,7 +5,7 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'figures/Fig._3._r2_spatial_scale.png'
+output.path <- 'figures/Fig._3._r2_spatial_scale.pdf'
 
 #load data, work up means and standard errors.----
 #requires the supplement file.
@@ -34,7 +34,7 @@ fun.se <- c(f.core.se, f.plot.se, f.site.se)
 bac.se <- c(b.core.se, b.plot.se, b.site.se)
 
 #png save line.----
-png(filename = output.path, width = 8, height = 4, units = 'in', res = 300)
+pdf(file = output.path, width = 7.087, height = 4)
 
 #Global plot settings.----
 par(mfrow = c(1,2), mar = c(3,3,1,1), oma = c(1,1,1,1))

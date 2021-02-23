@@ -6,7 +6,8 @@ source('paths.r')
 source('NEFI_functions/rsq_1.1.r')
 
 #set output path.----
-output.path <- 'figures/Fig._4._representative_groups.png'
+output.path <- 'figures/Fig._4._representative_groups.pdf'
+#output.path <- 'figures/test.pdf'
 
 #groups of interest----
 namey <- c('Russula','Ascomycota','oligotroph')
@@ -80,18 +81,20 @@ for(i in 1:length(core_mu)){
 }
 
 #png save line.----
-png(filename=output.path,width=12,height=12,units='in',res=300)
+#png(filename=output.path,width=12,height=12,units='in',res=300)
+pdf(file = output.path, width = 7.087, height = 8.5)
 
 #global plot settings.----
 par(mfrow = c(3,3),
     mai = c(0.3,0.3,0.3,0.3),
-    oma = c(4,6,3,1))
+    oma = c(4,6,1,0.2))
 trans <- 0.3
 limy <- c(0,1)
 core.cex <- 0.7
 plot.cex <- 1.0
 site.cex <- 1.5
-outer.cex <- 2
+outer.cex <- 1.25
+rsq.lab.cex <- 0.65
 glob.pch <- 16
 names <- namey
 out.color <- 'gray'
@@ -128,32 +131,36 @@ for(i in 1:length(namey)){
   y        <- obs[order(match(rownames(obs),names(x))),]
   
   #get y-limit.
-  obs_limit <- max(y)
+  obs_limit <- max(y)*1.1
   if(max(pi_0.975) > as.numeric(obs_limit)){obs_limit <- max(pi_0.975)}
   y_max <- as.numeric(obs_limit)*1.05
   if(y_max > 0.95){y_max <- 1}
+  if(i == 1 | i == 2){y_max <- 1.15}
+  y_min <- min(pi_0.025 * 0.95)
+  if(y_min < 0.05){y_min <- 0}
+  limy <- c(y_min, y_max)
 
   #plot
-  plot(y ~ x, cex = core.cex, pch=glob.pch, ylim=c(0,y_max), ylab=NA, xlab = NA, col = 'black', bty = 'l')
+  plot(y ~ x, cex = core.cex, pch=glob.pch, ylim=limy, ylab=NA, xlab = NA, col = 'black', bty = 'l')
   mod_fit <- lm(y ~ x)
   rsq <- round(summary(mod_fit)$r.squared,2)
   rsq.1 <- round(rsq_1.1(y, x), 2)
   if(rsq.1 < 0){rsq.1 <- 0}
   rsq.lab <- bquote(R^2 == .(rsq))
   rsq.1.lab <- bquote({R^2} [1:1] == .(rsq.1))
-  mtext(rsq.lab  , side = 3, line = -2.7, adj = 0.03)
-  mtext(rsq.1.lab, side = 3, line = -4.2, adj = 0.03)
+  mtext(rsq.lab  , side = 3, line = -2.6, adj = 0.03, cex = rsq.lab.cex)
+  mtext(rsq.1.lab, side = 3, line = -4.1, adj = 0.03, cex = rsq.lab.cex)
   #uppercase first letter.
   laby <- paste0(toupper(substr(namey[i], 1, 1)), substr(namey[i], 2, nchar(namey[i])))
   if(laby == 'Oligotroph'){laby <- 'Oligotrophic Bacteria'}
-  mtext(laby, side = 2, line = 2.5, cex = 1.5)
+  mtext(laby, side = 2, line = 2.5, cex = outer.cex)
   #add confidence interval.
   polygon(c(x, rev(x)),c(pi_0.975, rev(pi_0.025)), col=adjustcolor('green', trans), lty=0) #predictive interval.
   polygon(c(x, rev(x)),c(ci_0.975, rev(ci_0.025)), col=adjustcolor('blue' , trans), lty=0) #credible interval.
   #fraction within 95% predictive interval.
   in_it <- round(sum(as.numeric(y) < pi_0.975 & as.numeric(y) > pi_0.025) / length(y),2) * 100
   state <- paste0(in_it,'% of obs. within interval.')
-  mtext(state,side = 3, line = -1.3, adj = 0.05)
+  mtext(state,side = 3, line = -1.2, adj = 0.05, cex = rsq.lab.cex)
   abline(0,1,lwd=2)
   abline(mod_fit, lwd =2, lty = 2, col = bf_col)
   
@@ -192,9 +199,14 @@ for(i in 1:length(namey)){
   if(max(pi_0.975) > obs_limit){obs_limit <- max(pi_0.975)}
   y_max <- as.numeric(obs_limit)*1.05
   if(y_max > 0.95){y_max <- 1}
+  if(i == 2){y_max <- 1.15}
+  y_min <- min(pi_0.025 * 0.95)
+  if(y_min < 0.05){y_min <- 0}
+  limy <- c(y_min, y_max)
+  
   
   #plot
-  plot(obs.mu ~ x, cex = plot.cex, pch=glob.pch, ylim=c(0,y_max), ylab=NA, xlab = NA, col = obs.cols, bty = 'l')
+  plot(obs.mu ~ x, cex = plot.cex, pch=glob.pch, ylim=limy, ylab=NA, xlab = NA, col = obs.cols, bty = 'l')
   arrows(c(x), obs.lo95, c(x), obs.hi95, length=0.00, angle=90, code=3, col = obs.cols)
   mod_fit <- lm(obs.mu ~ x)
   rsq <- round(summary(mod_fit)$r.squared,2)
@@ -202,8 +214,8 @@ for(i in 1:length(namey)){
   if(rsq.1 < 0){rsq.1 <- 0}
   rsq.lab <- bquote(R^2 == .(rsq))
   rsq.1.lab <- bquote({R^2} [1:1] == .(rsq.1))
-  mtext(rsq.lab  , side = 3, line = -2.7, adj = 0.03)
-  mtext(rsq.1.lab, side = 3, line = -4.2, adj = 0.03)
+  mtext(rsq.lab  , side = 3, line = -2.6, adj = 0.03, cex = rsq.lab.cex)
+  mtext(rsq.1.lab, side = 3, line = -4.1, adj = 0.03, cex = rsq.lab.cex)
   #1:1 line
   abline(0,1, lwd = 2)
   abline(mod_fit, lwd =2, lty = 2, col = bf_col)
@@ -214,7 +226,7 @@ for(i in 1:length(namey)){
   #fraction within 95% predictive interval.
   in_it <- round(sum(obs.mu < pi_0.975 & obs.mu > pi_0.025) / length(obs.mu),2) *100
   state <- paste0(in_it,'% of obs. within interval.')
-  mtext(state,side = 3, line = -1.3, adj = 0.05)
+  mtext(state,side = 3, line = -1.2, adj = 0.05, cex = rsq.lab.cex)
   
   
   #site.level.----
@@ -250,9 +262,12 @@ for(i in 1:length(namey)){
   if(max(pi_0.975) > obs_limit){obs_limit <- max(pi_0.975)}
   y_max <- as.numeric(obs_limit)*1.05
   if(y_max > 0.95){y_max <- 1}
-
+  y_min <- min(pi_0.025 * 0.95)
+  if(y_min < 0.05){y_min <- 0}
+  limy <- c(y_min, y_max)
+  
   #plot
-  plot(obs.mu ~ x, cex = site.cex, pch=glob.pch, ylim=c(0,y_max), ylab=NA, xlab = NA, col = obs.cols, bty = 'l')
+  plot(obs.mu ~ x, cex = site.cex, pch=glob.pch, ylim=limy, ylab=NA, xlab = NA, col = obs.cols, bty = 'l')
   arrows(c(x), obs.lo95, c(x), obs.hi95, length=0.0, angle=90, code=3, col = obs.cols)
   mod_fit <- lm(obs.mu ~ x)
   rsq <- round(summary(mod_fit)$r.squared,2)
@@ -260,8 +275,8 @@ for(i in 1:length(namey)){
   if(rsq.1 < 0){rsq.1 <- 0}
   rsq.lab <- bquote(R^2 == .(rsq))
   rsq.1.lab <- bquote({R^2} [1:1] == .(rsq.1))
-  mtext(rsq.lab  , side = 3, line = -2.7, adj = 0.03)
-  mtext(rsq.1.lab, side = 3, line = -4.2, adj = 0.03)
+  mtext(rsq.lab  , side = 3, line = -2.6, adj = 0.03, cex = rsq.lab.cex)
+  mtext(rsq.1.lab, side = 3, line = -4.1, adj = 0.03, cex = rsq.lab.cex)
   #1:1 line
   abline(0,1, lwd = 2)
   abline(mod_fit, lwd =2, lty = 2, col = bf_col)
@@ -272,7 +287,7 @@ for(i in 1:length(namey)){
   #fraction within 95% predictive interval.
   in_it <- round(sum(obs.mu < pi_0.975 & obs.mu > pi_0.025) / length(obs.mu),2) *100
   state <- paste0(in_it,'% of obs. within interval.')
-  mtext(state,side = 3, line = -1.3, adj = 0.05)
+  mtext(state,side = 3, line = -1.2, adj = 0.05, cex = rsq.lab.cex)
 }
 
 #outer labels.----
