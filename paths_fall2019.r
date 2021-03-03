@@ -194,6 +194,9 @@ site_site.path <- paste0(dir,'site_site.rds')
 site_glob.path <- paste0(dir,'site_glob.rds')
 hierarch_filled.path <- paste0(dir,'hierarch_filled.path')
 
+#A very special 16S file.
+hierarch_filled_data.path <- '/projectnb/talbot-lab-data/NEFI_data/16S/pecan_gen/NEON_covariates_16S_ITS/NEON_covariates_aggregated/hierarch_filled_data.rds'
+
 #cleanup of NEON fun (which also has taxonomy) and SV tables.
 NEON_SV.table_clean.path <- paste0(dir,'NEON_SV.table_clean.rds')
 NEON_fun_clean.path <- paste0(dir,'NEON_fun_clean.rds')

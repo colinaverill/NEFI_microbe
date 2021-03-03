@@ -5,7 +5,7 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'figures/Supp._Fig._1._CV.png'
+output.path <- 'figures/Supp._Fig._2._CV.png'
 
 #Load calibration/validation rsq.1 data, Moran's I data.----
 d.ITS <- readRDS(NEON_dmilti.ddirch_analysis_summary.path)
@@ -91,7 +91,7 @@ x.cex <- 1.0 #x-axis label size.
 cols <- c('purple','cyan','yellow')
 #Calibration and Validation rsq ~ function/phylo scale 16S.----
 x <- 1:length(cal.mu.16S)
-limy <- c(-0.03,max(val.mu.16S)*1.1)
+limy <- c(-0.03,max(c(cal.mu.16S,val.mu.16S))*1.1)
 #Calibration.
 plot(cal.mu.16S ~ x, cex = 2.5, ylim = limy, pch = 16, ylab = NA, xlab = NA, bty='l', xaxt = 'n', yaxs='i', las = 1, lwd = 0)
 #arrows(x, lev.mu - lev.se, x1 = x, y1 = lev.mu + lev.se, length=0.00, angle=90, code=3, col = 'black')

@@ -267,6 +267,7 @@ plot_glob.path <- paste0(dir,'plot_glob.rds')
 site_site.path <- paste0(dir,'site_site.rds')
 site_glob.path <- paste0(dir,'site_glob.rds')
 hierarch_filled.path <- paste0(dir,'hierarch_filled.path')
+#hierarch_filled_data.path <- paste0(dir, "hierarch_filled_data.rds") #This was necessary for 16S foreacst to run.
 
 #cleanup of NEON fun (which also has taxonomy) and SV tables.
 NEON_SV.table_clean.path <- paste0(dir,'NEON_SV.table_clean.rds')

@@ -7,7 +7,7 @@ source('NEFI_functions/rsq_1.1.r')
 library(RColorBrewer)
 
 #set figure out put path.----
-output.path <- 'figures/Supp._Fig._2._cross.validation_r2.png'
+output.path <- 'figures/Supp._Fig._1._cross.validation_r2.png'
 
 #Load ITS cross-validation data..----
 #Cross validation forecasts
