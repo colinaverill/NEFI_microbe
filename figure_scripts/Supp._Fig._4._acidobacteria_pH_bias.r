@@ -6,7 +6,7 @@ library(dplyr)
 source("paths_fall2019.r")
 
 #set figure output path.----
-output.path <- 'figures/Supp._Fig._4._acidobacteria_pH_bias.png'
+output.path <- 'figures/Supp._Fig._4._acidobacteria_pH_bias.jpg'
 
 
 #### PREP NEON DATA #### -----------------------------------
@@ -57,7 +57,7 @@ colnames(cal.df.plot)[4] <- "dataset"
 
 #### CREATE FIGURES #### -----------------------------------
 #png save line.----
-png(filename=output.path,width=11,height=5,units='in',res=300)
+jpeg(filename=output.path,width=11,height=5,units='in',res=300)
 
 #global plot settings.----
 df.plot <- rbind(cal.df.plot, neon.df.plot)

@@ -5,7 +5,7 @@ source('paths_fall2019.r')
 source('paths.r')
 
 #set output path.
-output.path <- 'figures/Supp._Fig._5._variance_decomposition.png'
+output.path <- 'figures/Supp._Fig._5._variance_decomposition.jpg'
 
 #load data.----
 d.ITS <- readRDS(NEON_ddirch_var.decomp_all_groups.path)
@@ -65,8 +65,8 @@ pro.d.16S <- density(pro.16S, from = 0, to = 1)
 pro.d_xy.16S <- data.frame(pro.d.16S$x,pro.d.16S$y)
 pro.d_xy.16S[nrow(pro.d_xy.16S),2] <- 0
 
-#png save line.----
-png(filename=output.path,width=10,height=5,units='in',res=300)
+#jpeg save line.----
+jpeg(filename=output.path,width=10,height=5,units='in',res=300)
 
 #Global plot settings.----
 par(mfrow = c(1,2), mar = c(4.5,4,1,1))

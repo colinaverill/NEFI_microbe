@@ -9,7 +9,7 @@ library(RColorBrewer)
 library(gridExtra)
 
 #set output path.----
-output.path <- 'figures/Supp._Fig._3._parameter_PCA.png'
+output.path <- 'figures/Supp._Fig._3._parameter_PCA.jpg'
 
 #load raw data and predictors.----
 pl.ITS <- readRDS(ted_ITS_prior_all.groups_JAGSfits.path)
@@ -129,7 +129,7 @@ par.pca.16S <- prcomp(t(d.16S), center = TRUE,scale. = TRUE)
 
 
 #png save line.----
-png(filename=output.path,width=11,height=8,units='in',res=300)
+jpeg(filename=output.path,width=11,height=8,units='in',res=300)
 
 #plot code ITS.----
 #PCA plot.

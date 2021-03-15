@@ -5,7 +5,7 @@ source('paths.r')
 library(RColorBrewer)
 
 #set output path.----
-output.path <- 'figures/Supp._Fig._2._CV.png'
+output.path <- 'figures/Supp._Fig._2._CV.jpg'
 
 #Load calibration/validation rsq.1 data, Moran's I data.----
 d.ITS <- readRDS(NEON_dmilti.ddirch_analysis_summary.path)
@@ -77,8 +77,8 @@ colnames(scale.list) <- c('core','plot','site')
 
 
 
-#png save line.----
-png(filename = output.path, width = 8, height = 5, units = 'in', res = 300)
+#jpeg save line.----
+jpeg(filename = output.path, width = 8, height = 5, units = 'in', res = 300)
 
 #Global plot settings.----
 par(mfrow = c(1,2), mar = c(5,4,2,1), oma = c(1,1,1,1))

@@ -2,11 +2,11 @@
 rm(list=ls())
 source('paths_fall2019.r')
 source('paths.r')
-library(ggplot2)
-library(ggalt)
+#library(ggplot2)
+library(ggalt) #will load required package, ggplot2.
 
 #set output path.----
-out.path <- 'figures/Supp._Fig._6._sample_map.png'
+out.path <- 'figures/Supp._Fig._6._sample_map.jpg'
 
 #load location data and format.----
 d <- readRDS(ITS_site_dates.path)
@@ -31,7 +31,7 @@ lat.16S <- d.16S$latitude
 lon.16S <- d.16S$longitude
 
 #setup save routine.----
-png(filename=out.path,width=7,height=5,units='in',res=300)
+jpeg(filename=out.path,width=7,height=5,units='in',res=300)
 
 #build map.----
 #Slightly cutting off right edge of x-axis.

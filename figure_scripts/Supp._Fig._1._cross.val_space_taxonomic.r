@@ -7,7 +7,7 @@ source('NEFI_functions/rsq_1.1.r')
 library(RColorBrewer)
 
 #set figure out put path.----
-output.path <- 'figures/Supp._Fig._1._cross.validation_r2.png'
+output.path <- 'figures/Supp._Fig._1._cross.validation_r2.jpg'
 
 #Load ITS cross-validation data..----
 #Cross validation forecasts
@@ -265,8 +265,8 @@ plot.all.ITS <- data.frame(do.call(rbind, plot.list.ITS))
 #put together.
 to.plot.ITS <- cbind(core.lev.mu.ITS, plot.lev.mu.ITS)
 
-#png save line.-----
-png(filename=output.path,width=8,height=5,units='in',res=300)
+#jpeg save line.-----
+jpeg(filename=output.path,width=8,height=5,units='in',res=300)
 
 #Begin plot: Global plot settings.-----
 par(mfrow = c(1,2),
